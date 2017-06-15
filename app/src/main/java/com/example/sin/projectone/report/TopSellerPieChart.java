@@ -26,6 +26,8 @@ import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by naki_ on 12/13/2016.
  */
@@ -53,7 +55,7 @@ public class TopSellerPieChart extends android.app.Fragment {
         weekBtn =(Button) rootView.findViewById(R.id.report_top_week_btn) ;
         monthBtn =(Button) rootView.findViewById(R.id.report_top_month_btn) ;
         chart = (PieChartView) rootView.findViewById(R.id.chart);
-        chart.setOnValueTouchListener(new ValueTouchListener());
+
         weekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,8 +167,18 @@ public class TopSellerPieChart extends android.app.Fragment {
         String color[] = {"#f44336","#C2185B","#7B1FA2","#8BC34A","#FFEB3B"};
         JSONObject json = new JSONObject();
         JSONArray temp = ProductDBHelper.getInstance(TopSellerPieChart.this.getActivity()).getTopDetail(type);
+        if(temp.length()==0){
+            chart.setVisibility(View.GONE);
+        }
+        else{
+            chart.setOnValueTouchListener(new ValueTouchListener());
+        }
+
         for(int i = 0;i< temp.length();i++){
+            Log.d(TAG, "queryData: "+temp.length());
+            System.out.println("queryData: "+temp.length());
             try {
+
 //                Log.d("check obj", );
                 SliceValue sliceValue = new SliceValue(temp.getJSONObject(i).getInt("qty"), ChartUtils.pickColor());
                 sliceValue.setLabel((temp.getJSONObject(i).getString("name")+" "+ (int)sliceValue.getValue()));
