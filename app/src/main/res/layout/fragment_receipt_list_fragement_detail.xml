@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0px"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:text="1111111111"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/receipt_lis_fragment_trans_id" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_gravity="end"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0px"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="2000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/receipt_lis_fragment_total"
+            android:textAlignment="textEnd" />
+
+        <TextView
+            android:text="2016-12-06 12:34:56"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/receipt_lis_fragment_create_at"
+            android:textAlignment="textEnd" />
+    </LinearLayout>
+
+</LinearLayout>

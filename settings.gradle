@@ -1,0 +1,6 @@
+include ':app'
+//, ':sample', ':zxing-android', ':library'
+
+//project(':sample').projectDir = new File('zxingfragmentlib-master/sample')
+//project(':zxing-android').projectDir = new File('zxingfragmentlib-master/zxing-android')
+//project(':library').projectDir = new File('zxingfragmentlib-master/library')

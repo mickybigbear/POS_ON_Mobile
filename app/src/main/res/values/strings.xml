@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">ProjectOne</string>
+
+    <string name="label_product_name">Product name :</string>
+    <string name="label_product_barcode">Barcode :</string>
+    <string name="label_product_price">Price/ea :</string>
+    <string name="label_product_qty">Qty :</string>
+    <string name="label_product_type">Type :</string>
+    <string name="label_product_cost">Cost :</string>
+    <string name="label_product_details">Details :</string>
+    <string name="unit_bath">Bath</string>
+    <string name="zero">0.00</string>
+    <string name="add_product">add product</string>
+    <string name="view_product">view product</string>
+    <string name="label_product_total">Total :</string>
+    <string name="label_product_discount">Discount :</string>
+    <string name="btn_submit">SUBMIT</string>
+    <string name="btn_add">ADD</string>
+    <string name="btn_last_scan">Last Scan</string>
+    <string name="btn_back">BACK</string>
+    <string name="btn_edit">EDIT</string>
+    <string name="sign_in_sign_in_button">Sign in / Register</string>
+    <string name="sign_in_error_invalid_email">Invalid email</string>
+    <string name="sign_in_error_invalid_password">Password must 6–12 chars</string>
+    <string name="sign_in_hint_email">E-mail</string>
+    <string name="sign_in_hint_pass">Password 6–12 chars</string>
+    <string name="register_store_store_name">Store name</string>
+    <string name="register_store_store_pass">Store password</string>
+    <string name="register_store_radio_owner">Owner</string>
+    <string name="register_store_radio_emp">Employee</string>
+    <string name="register_store_button_register_store">Register store</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="receipt_detail_subtotal_text">Sub Total</string>
+    <string name="receipt_detail_discount_text">Discount</string>
+    <string name="receipt_detail_total_text">Total</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

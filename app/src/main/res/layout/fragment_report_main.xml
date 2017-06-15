@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <Button
+        android:text="DAILY REPORT"
+        android:layout_marginTop="18dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/report_main_butt_daily" />
+
+    <Button
+        android:layout_marginTop="8dp"
+        android:text="TOP SELL PRODUCT"
+        android:minWidth="88dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:height="36dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/report_main_butt_tops" />
+</LinearLayout>
