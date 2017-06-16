@@ -1,6 +1,5 @@
 package com.example.sin.projectone.payment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
@@ -9,9 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.sin.projectone.R;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -108,7 +105,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        mListener = null;
     }
 
     @Override
@@ -127,7 +124,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     @Override
     public void handleResult(Result result) {
         if (mListener != null) {
-            mListener.onDetectBarcode(result.toString());
+            mListener.onScanResult(result.toString());
         }
         mScannerView.resumeCameraPreview(this);
     }
@@ -145,6 +142,6 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //void onFragmentInteraction(Uri uri);
-        void onDetectBarcode(String barcode);
+        void onScanResult(String barcode);
     }
 }
