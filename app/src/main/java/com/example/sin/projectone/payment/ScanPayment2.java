@@ -1,5 +1,6 @@
 package com.example.sin.projectone.payment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
@@ -8,8 +9,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.sin.projectone.R;
+import com.google.zxing.Result;
+
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -19,7 +24,7 @@ import com.example.sin.projectone.R;
 // * Use the {@link ScanPayment2#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class ScanPayment2 extends Fragment {
+public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +34,8 @@ public class ScanPayment2 extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    //private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
+    private ZXingScannerView mScannerView;
 
     public ScanPayment2() {
         // Required empty public constructor
@@ -44,6 +50,18 @@ public class ScanPayment2 extends Fragment {
      * @return A new instance of fragment ScanPayment2.
      */
     // TODO: Rename and change types and number of parameters
+    public static ScanPayment2 newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+        ScanPayment2 fragment = new ScanPayment2();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        if(mListener!=null){
+            fragment.mListener = mListener;
+        }
+        return fragment;
+    }
+
     public static ScanPayment2 newInstance(String param1, String param2) {
         ScanPayment2 fragment = new ScanPayment2();
         Bundle args = new Bundle();
@@ -63,11 +81,10 @@ public class ScanPayment2 extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_scan_payment2, container, false);
-        return view;
+        mScannerView = new ZXingScannerView(getActivity());
+        return mScannerView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -94,6 +111,27 @@ public class ScanPayment2 extends Fragment {
 //        mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+        mScannerView.startCamera();          // Start camera on resume
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mScannerView.stopCamera();           // Stop camera on pause
+    }
+
+    @Override
+    public void handleResult(Result result) {
+        if (mListener != null) {
+            mListener.onDetectBarcode(result.toString());
+        }
+        mScannerView.resumeCameraPreview(this);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -104,8 +142,9 @@ public class ScanPayment2 extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        //void onFragmentInteraction(Uri uri);
+        void onDetectBarcode(String barcode);
+    }
 }
