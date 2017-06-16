@@ -33,6 +33,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
 
     private OnFragmentInteractionListener mListener;
     private ZXingScannerView mScannerView;
+    private boolean mFlash;
 
     public ScanPayment2() {
         // Required empty public constructor
@@ -81,6 +82,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mScannerView = new ZXingScannerView(getActivity());
+        mScannerView.setOnClickListener(onScannerClick());
         return mScannerView;
     }
 
@@ -127,6 +129,16 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
             mListener.onScanResult(result.toString());
         }
         mScannerView.resumeCameraPreview(this);
+    }
+
+    private View.OnClickListener onScannerClick(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFlash = !mFlash;
+                mScannerView.setFlash(mFlash);
+            }
+        };
     }
 
     /**
