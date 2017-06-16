@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sin.projectone.main.MainActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -193,9 +194,11 @@ public class SignInActivity extends AppCompatActivity {
         startActivity(regisIntent);
     }
     private void navigateToMainActivity(String user){
-        Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
+        //Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
+        Intent mainIntent = new Intent(getApplicationContext(),MainActivity.class);
         mainIntent.putExtra("username",user);
         startActivity(mainIntent);
+        finish();
     }
     @Override
     public void onBackPressed(){

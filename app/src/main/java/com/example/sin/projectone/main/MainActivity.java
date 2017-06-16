@@ -1,8 +1,10 @@
 package com.example.sin.projectone.main;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_payment) {
-             newFragment = new com.example.sin.projectone.payment.Container();
+             //newFragment = new com.example.sin.projectone.payment.Container();
+            newFragment = new com.example.sin.projectone.payment.Main2();
         } else if (id == R.id.nav_product) {
             newFragment = new com.example.sin.projectone.item.Container();
         } else if (id == R.id.nav_report) {
