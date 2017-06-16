@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sin.projectone.ProductDBHelper;
@@ -47,6 +48,7 @@ public class TopSellerPieChart extends android.app.Fragment {
 
     private Button weekBtn ;
     private Button monthBtn;
+    private TextView empText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class TopSellerPieChart extends android.app.Fragment {
         weekBtn =(Button) rootView.findViewById(R.id.report_top_week_btn) ;
         monthBtn =(Button) rootView.findViewById(R.id.report_top_month_btn) ;
         chart = (PieChartView) rootView.findViewById(R.id.chart);
+        empText = (TextView)rootView.findViewById(android.R.id.empty);
 
         weekBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +175,7 @@ public class TopSellerPieChart extends android.app.Fragment {
         }
         else{
             chart.setOnValueTouchListener(new ValueTouchListener());
+            empText.setText("");
         }
 
         for(int i = 0;i< temp.length();i++){

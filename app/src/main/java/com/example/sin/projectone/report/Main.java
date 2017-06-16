@@ -42,13 +42,14 @@ public class Main extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("check BTOON CLICK", "onClick: ");
-                Fragment newFragment = new TopSeller();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.fragment_report_container, newFragment).commit();
-
-//                transaction.addToBackStack(null);
+                Fragment newFragment = new TopSellerPieChart();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack if needed
+                transaction.replace(R.id.fragment_report_container, newFragment, null);
+                transaction.addToBackStack(null);
 // Commit the transaction
+                transaction.commit();
 
             }
         });
