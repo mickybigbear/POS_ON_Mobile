@@ -115,6 +115,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
         _productList.setAdapter(adapter);
 
         btn_send = (Button) view.findViewById(R.id.btn_send);
+        btn_send.setEnabled(false);
         text_total =(TextView) view.findViewById(R.id.text_total);
         edt_discount = (EditText) view.findViewById(R.id.edit_text_discount);
         text_total.setText(String.valueOf(getTotal()));
@@ -126,6 +127,9 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(products.size()<=0){
+                    return;
+                }
                 final FragmentManager fragmentManager = getFragmentManager();
                 final ProgressDialog progress = ProgressDialog.show(EndPayment2.this.getActivity(), "Loading",
                         "Please wait ...", true);
@@ -219,6 +223,9 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
     public void updateAdapter(){
         adapter.notifyDataSetChanged();
         text_total.setText(String.valueOf(getTotal()));
+        btn_send.setEnabled(true);
+        if(adapter.getCount()<=0){btn_send.setEnabled(false); }
+        else{btn_send.setEnabled(true);}
     }
 
     /**
