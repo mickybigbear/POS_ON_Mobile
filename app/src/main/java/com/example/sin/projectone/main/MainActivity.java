@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
@@ -39,12 +40,15 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentManager fragmentManager;
+    private String userName= "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.deleteDatabase(ProductDBHelper.DATABASE_NAME); // debug
         int a = Constant.SHOP_ID;
         loadProducts();
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("username");
         //setContentView(R.layout.content_main);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,7 +71,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
 
+        TextView emailNavText = (TextView) headerView.findViewById(R.id.textView);
+        emailNavText.setText(userName);
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.fragment_container_main) != null) {

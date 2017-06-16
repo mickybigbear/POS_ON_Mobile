@@ -132,8 +132,6 @@ public class SignInActivity extends AppCompatActivity {
                             Constant.USER_ID = Integer.valueOf(userID);
                             navigateToMainActivity(user);
                             CharSequence text = res;
-                            Constant.SHOP_ID = Integer.valueOf(shopID);
-                            Constant.USER_ID = Integer.valueOf(userID);
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
                         }
