@@ -170,6 +170,7 @@ public class TopSellerPieChart extends android.app.Fragment {
         String color[] = {"#f44336","#C2185B","#7B1FA2","#8BC34A","#FFEB3B"};
         JSONObject json = new JSONObject();
         JSONArray temp = ProductDBHelper.getInstance(TopSellerPieChart.this.getActivity()).getTopDetail(type);
+        Log.d(TAG, "queryData: "+temp.length());
         if(temp.length()==0){
             chart.setVisibility(View.GONE);
         }
