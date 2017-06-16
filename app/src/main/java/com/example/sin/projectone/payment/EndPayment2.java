@@ -2,17 +2,21 @@ package com.example.sin.projectone.payment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sin.projectone.ApplicationHelper;
 import com.example.sin.projectone.Constant;
@@ -20,6 +24,7 @@ import com.example.sin.projectone.MessageAlertDialog;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductAdapter;
 import com.example.sin.projectone.ProductDBHelper;
+import com.example.sin.projectone.ProductPaymentDialog;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.WebService;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -112,6 +117,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
         _productList = (ListView)view.findViewById(R.id.product_list);
         adapter = new ProductAdapter(ApplicationHelper.getAppContext(),products,R.layout.list_item_endpayment);
         _productList.setAdapter(adapter);
+        _productList.setOnItemClickListener(onItemClickListener());
 
         btn_send = (Button) view.findViewById(R.id.btn_send);
         btn_send.setEnabled(false);
@@ -128,6 +134,15 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
             public void onClick(View v) {
                 if(products.size()<=0){
                     return;
+                }
+                for(int i=0;i<products.size();i++){
+                    Product pdInBaskett = products.get(i);
+                    int maxStock = ProductDBHelper.getInstance(getActivity().getApplicationContext()).searchProductByID(pdInBaskett.id).qty;
+                    if(maxStock<pdInBaskett.qty){
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Product "+pdInBaskett.name+" in stock is not enough.",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 final FragmentManager fragmentManager = getFragmentManager();
                 final ProgressDialog progress = ProgressDialog.show(EndPayment2.this.getActivity(), "Loading",
@@ -219,12 +234,22 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
     }
 
     @Override
-    public void updateAdapter(){
+    public void updatePage(){
+        removeProductEmpty();
         adapter.notifyDataSetChanged();
         text_total.setText(String.valueOf(getTotal()));
         btn_send.setEnabled(true);
         if(adapter.getCount()<=0){btn_send.setEnabled(false); }
         else{btn_send.setEnabled(true);}
+    }
+
+    private void removeProductEmpty(){
+        for(int i=0;i<products.size();i++){
+            Product pdInBasket = products.get(i);
+            if(pdInBasket.qty==0){
+                products.remove(i);
+            }
+        }
     }
 
     /**
@@ -252,6 +277,33 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
             total += p.qty * price;
         }
         return total;
+    }
+
+    private ListView.OnItemClickListener onItemClickListener(){
+        return new ListView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager fragmentManager = getFragmentManager();
+                String tag = Constant.TAG_FRAGMENT_DIALOG_PRODUCT_DETAIL;
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                Fragment prev = fragmentManager.findFragmentByTag(tag);
+                if(prev!=null){
+                    transaction.remove(prev);
+                }
+                Product product = adapter.getItem(position);
+                ProductPaymentDialog productPaymentDialog =  ProductPaymentDialog.newInstance(product);
+                productPaymentDialog.setTargetFragment(EndPayment2.this, Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG);
+                productPaymentDialog.show(fragmentManager, tag);
+            }
+        };
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG &&
+                resultCode==Constant.RESULT_CODE_PRODUCT_PAYMENT_DIALOG_SUBMIT){
+            updatePage();
+        }
     }
 
 }

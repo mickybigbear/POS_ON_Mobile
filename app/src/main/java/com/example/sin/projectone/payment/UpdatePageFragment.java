@@ -5,5 +5,5 @@ package com.example.sin.projectone.payment;
  */
 
 public interface UpdatePageFragment {
-    public void updateAdapter();
+    public void updatePage();
 }

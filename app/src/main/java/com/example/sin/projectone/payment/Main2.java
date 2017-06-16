@@ -2,7 +2,6 @@ package com.example.sin.projectone.payment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -217,7 +216,7 @@ EndPayment2.OnFragmentInteractionListener{
         public int getItemPosition(Object object) {
             Fragment fragment = (Fragment)object;
             if (fragment instanceof UpdatePageFragment) {
-                ((UpdatePageFragment) fragment).updateAdapter();
+                ((UpdatePageFragment) fragment).updatePage();
             }
             return super.getItemPosition(object);
         }
