@@ -2,6 +2,8 @@ package com.example.sin.projectone.payment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -34,6 +36,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     private OnFragmentInteractionListener mListener;
     private ZXingScannerView mScannerView;
     private boolean mFlash;
+    private ToneGenerator toneG;
 
     public ScanPayment2() {
         // Required empty public constructor
@@ -82,6 +85,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mScannerView = new ZXingScannerView(getActivity());
+        toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
         mScannerView.setOnClickListener(onScannerClick());
         return mScannerView;
     }
@@ -128,6 +132,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
         if (mListener != null) {
             mListener.onScanResult(result.toString());
         }
+        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
         mScannerView.resumeCameraPreview(this);
     }
 

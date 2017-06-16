@@ -24,12 +24,12 @@ import java.util.ArrayList;
 ///**
 // * A simple {@link Fragment} subclass.
 // * Activities that contain this fragment must implement the
-// * {@link Main2.OnFragmentInteractionListener} interface
+// * {@link MainPayment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
-// * Use the {@link Main2#newInstance} factory method to
+// * Use the {@link MainPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment2.OnFragmentInteractionListener,
+public class MainPayment extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment2.OnFragmentInteractionListener,
 EndPayment2.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,12 +43,12 @@ EndPayment2.OnFragmentInteractionListener{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    public ArrayList<Product> products = new ArrayList<Product>();
+    public ArrayList<Product> basketProduct = new ArrayList<Product>();
 
 
     //private OnFragmentInteractionListener mListener;
 
-    public Main2() {
+    public MainPayment() {
         // Required empty public constructor
     }
 
@@ -58,11 +58,11 @@ EndPayment2.OnFragmentInteractionListener{
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Main2.
+     * @return A new instance of fragment MainPayment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Main2 newInstance(String param1, String param2) {
-        Main2 fragment = new Main2();
+    public static MainPayment newInstance(String param1, String param2) {
+        MainPayment fragment = new MainPayment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -83,7 +83,7 @@ EndPayment2.OnFragmentInteractionListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main2, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_payment, container, false);
 
 
         //Initializing the tablayout
@@ -151,18 +151,21 @@ EndPayment2.OnFragmentInteractionListener{
     @Override
     public void onScanResult(String barcode) {
         Product newProduct = ProductDBHelper.getInstance(getActivity().getApplicationContext()).searchProductByBarCode(barcode);
-        if(newProduct!=null || newProduct.qty<=0){
+        if(newProduct!=null){
+            if(newProduct.qty<=0){
+                return;
+            }
             newProduct.qty=1;
             boolean found = false;
-            for(int i=0; i<products.size();i++){
-                Product checkP = products.get(i);
+            for(int i = 0; i< basketProduct.size(); i++){
+                Product checkP = basketProduct.get(i);
                 if(newProduct.id.equals(checkP.id)){
                     checkP.qty +=1;
                     found = true;
                     break;
                 }
             } if(!found){
-                products.add(newProduct);
+                basketProduct.add(newProduct);
             }
             Toast.makeText(getActivity().getApplicationContext(), "finish add item", Toast.LENGTH_SHORT).show();
         } else{
@@ -173,7 +176,7 @@ EndPayment2.OnFragmentInteractionListener{
 
     @Override
     public void onSuccessPayment() {
-        products.clear();
+        basketProduct.clear();
         mViewPager.setCurrentItem(0);
         mSectionsPagerAdapter.notifyDataSetChanged();
     }
@@ -209,9 +212,10 @@ EndPayment2.OnFragmentInteractionListener{
             if (position == 0) {
                 return ScanPayment2.newInstance("", "", (ScanPayment2.OnFragmentInteractionListener)parent);
             } else {
-                return EndPayment2.newInstance("", "", products, (EndPayment2.OnFragmentInteractionListener)parent);
+                return EndPayment2.newInstance("", "", basketProduct, (EndPayment2.OnFragmentInteractionListener)parent);
             }
         }
+
         @Override
         public int getItemPosition(Object object) {
             Fragment fragment = (Fragment)object;

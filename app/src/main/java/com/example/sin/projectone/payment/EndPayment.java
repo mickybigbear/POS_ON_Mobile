@@ -124,7 +124,7 @@ public class EndPayment extends Fragment {
                     return;
                 }
                 JSONObject transaction =  ProductDBHelper.getInstance(ApplicationHelper.getAppContext()).getJSONTransaction(products,detail,discount,total);
-                //products.clear(); //  block send data more once transaction
+                //basketProduct.clear(); //  block send data more once transaction
                 WebService.sendTransaction(new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

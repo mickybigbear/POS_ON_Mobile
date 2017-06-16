@@ -23,6 +23,7 @@ import com.example.sin.projectone.HttpUtilsAsync;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.WebService;
+import com.example.sin.projectone.payment.MainPayment;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentManager fragmentManager;
     private String userName= "";
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         userName = intent.getStringExtra("username");
         //setContentView(R.layout.content_main);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -81,8 +83,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             // Create a new Fragment to be placed in the activity layout
-            WelcomeFragment firstFragment = new WelcomeFragment();
-
+            MainPayment firstFragment = new MainPayment();
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
             firstFragment.setArguments(getIntent().getExtras());
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container_main, firstFragment).commit();
+            toolbar.setTitle("Payment");
         }
     }
 
@@ -148,15 +150,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_payment) {
              //newFragment = new com.example.sin.projectone.payment.Container();
-            newFragment = new com.example.sin.projectone.payment.Main2();
+            toolbar.setTitle("Payment");
+            newFragment = new MainPayment();
         } else if (id == R.id.nav_product) {
             newFragment = new com.example.sin.projectone.item.Container();
+            toolbar.setTitle("Product");
         } else if (id == R.id.nav_report) {
             newFragment = new com.example.sin.projectone.report.Container();
+            toolbar.setTitle("Report");
         } else if (id == R.id.nav_receipt) {
             newFragment = new com.example.sin.projectone.receipt.Container();
         } else if (id == R.id.nav_contact) {
             newFragment = new com.example.sin.projectone.help.Main();
+            toolbar.setTitle("Contact");
         }
         if(newFragment!=null){
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -54,6 +54,7 @@ public class AddProduct extends Fragment {
     private ImageButton btn_scan;
     private String lastBarcodeResult="";
 
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_add, container, false);
         fragmentManager = getFragmentManager();
@@ -69,6 +70,9 @@ public class AddProduct extends Fragment {
         edt_p_detail = (EditText) view.findViewById(R.id.edt_text_product_details);
         edt_p_type = (EditText) view.findViewById(R.id.edt_text_product_type);
         imgProduct = (ImageView) view.findViewById(R.id.img_product);
+        if(targetImg!=null){
+            imgProduct.setImageBitmap(targetImg);
+        }
         btn_scan = (ImageButton) view.findViewById(R.id.btn_scan);
 
         btn_add.setOnClickListener(onAddClick());

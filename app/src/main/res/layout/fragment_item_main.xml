@@ -7,11 +7,13 @@
         android:text="@string/add_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_add_product" />
+        android:id="@+id/btn_add_product"
+        android:layout_margin="10dp"/>
 
     <Button
         android:text="@string/view_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_view_product" />
+        android:id="@+id/btn_view_product"
+        android:layout_margin="10dp"/>
 </LinearLayout>

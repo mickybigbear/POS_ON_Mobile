@@ -113,7 +113,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_end_payment2, container, false);
+        View view = inflater.inflate(R.layout.fragment_payment_end2, container, false);
         _productList = (ListView)view.findViewById(R.id.product_list);
         adapter = new ProductAdapter(ApplicationHelper.getAppContext(),products,R.layout.list_item_endpayment);
         _productList.setAdapter(adapter);
@@ -160,7 +160,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                     return;
                 }
                 JSONObject transaction =  ProductDBHelper.getInstance(ApplicationHelper.getAppContext()).getJSONTransaction(products,detail,discount,total);
-                //products.clear(); //  block send data more once transaction
+                //basketProduct.clear(); //  block send data more once transaction
                 WebService.sendTransaction(new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
