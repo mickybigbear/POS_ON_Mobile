@@ -361,7 +361,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
             values.put(Table.COLUMN_QTY,product.qty);
             values.put(Table.COLUMN_NAME, product.name);
             values.put(Table.COLUMN_TYPE, product.type);
-            values.put(Table.COLUMN_PRICE, product.id);
+            values.put(Table.COLUMN_PRICE, product.price);
             values.put(Table.COLUMN_IMG, product.imgName);
             values.put(Table.COLUMN_COST, product.cost);
             values.put(Table.COLUMN_DETAILS, product.details);
