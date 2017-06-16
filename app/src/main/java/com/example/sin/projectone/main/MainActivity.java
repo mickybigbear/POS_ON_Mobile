@@ -1,15 +1,12 @@
 package com.example.sin.projectone.main;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +16,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.sin.projectone.Constant;
+import com.example.sin.projectone.HttpUtilsAsync;
+import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.WebService;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity extends AppCompatActivity
@@ -29,6 +36,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Constant.SHOP_ID = 37;
+        Constant.USER_ID = 42;
+        loadProducts();
         //setContentView(R.layout.content_main);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -51,7 +61,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.fragment_container_main) != null) {
@@ -146,5 +155,67 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private boolean loadProducts(){
+        WebService.getAllProduct(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if(response.length()>0){
+                        ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).LoadProduct(response.getJSONArray("Products"));
+                    }
+                    else if(response.length()==0){
+                        System.out.println("Empty");
+                    }
+                    loadTransaction();
+                    System.out.println("finish");
+                    //ProductDBHelper.getInstance(getApplicationContext()).ShowListProduct();
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return true;
+    }
+    private boolean loadTransaction(){
+        // debug
+        HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION+Constant.SHOP_ID, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if(response.length()>0){
+                        ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).loadTransaction(response.getJSONArray("transaction"));
+                        for(int i=0;i<response.getJSONArray("transaction").length();i++){
+                            System.out.println(response.getJSONArray("transaction").length());
+                            System.out.println(response.getJSONArray("transaction").getJSONObject(i));
+                            JSONObject jsonObj = response.getJSONArray("transaction").getJSONObject(i);
+                            String createDate = jsonObj.getString("createAt");
+                            createDate = createDate.replace(' ','T');
+                            System.out.println(jsonObj.getString("transactionID"));
+                            System.out.println(jsonObj.getString("createAt"));
+                            HttpUtilsAsync.get(Constant.URL_GET_TRANSACTION_DETAIL+jsonObj.getString("transactionID")+"/"+createDate, null, new JsonHttpResponseHandler(){
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    System.out.println(response);
+                                    try {
+                                        ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).loadTransactionDetail(response.getJSONArray("transactionDetail"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    else if(response.length()==0){
+                        System.out.println("Empty");
+                    }
+                    System.out.println("finish");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return true;
+    }
 }
