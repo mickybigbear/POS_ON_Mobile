@@ -80,19 +80,13 @@
         android:layout_weight="0.1">
 
         <Button
-            android:text="Back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_cancel"
-            android:layout_marginStart="52dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
             android:text="Send"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="47dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textSize="15dp"
+
             android:id="@+id/btn_send"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" />

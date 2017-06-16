@@ -8,13 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -25,8 +21,6 @@ import com.example.sin.projectone.R;
 
 import java.util.ArrayList;
 
-import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -36,7 +30,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 // * Use the {@link Main2#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment2.OnFragmentInteractionListener {
+public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment2.OnFragmentInteractionListener,
+EndPayment2.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -102,10 +97,12 @@ public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, 
         tabLayout.addOnTabSelectedListener(this);
 
         // Inflate the layout for this fragment
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), this);
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), this);
         mViewPager = (ViewPager) view.findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
 
         return view;
 
@@ -153,9 +150,10 @@ public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, 
     }
 
     @Override
-    public void onDetectBarcode(String barcode) {
+    public void onScanResult(String barcode) {
         Product newProduct = ProductDBHelper.getInstance(getActivity().getApplicationContext()).searchProductByBarCode(barcode);
-        if(newProduct!=null){
+        if(newProduct!=null || newProduct.qty<=0){
+            newProduct.qty=1;
             boolean found = false;
             for(int i=0; i<products.size();i++){
                 Product checkP = products.get(i);
@@ -171,11 +169,14 @@ public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, 
         } else{
             Toast.makeText(getActivity().getApplicationContext(), "Not found product barcode: "+barcode, Toast.LENGTH_SHORT).show();
         }
+        mSectionsPagerAdapter.notifyDataSetChanged();
+    }
 
-
-
-
-
+    @Override
+    public void onSuccessPayment() {
+        products.clear();
+        mViewPager.setCurrentItem(0);
+        mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
 
@@ -194,7 +195,7 @@ public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, 
 //        void onFragmentInteraction(Uri uri);
 //    }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private Fragment parent;
         public int numSection = 0;
 
@@ -209,8 +210,16 @@ public class Main2 extends Fragment implements TabLayout.OnTabSelectedListener, 
             if (position == 0) {
                 return ScanPayment2.newInstance("", "", (ScanPayment2.OnFragmentInteractionListener)parent);
             } else {
-                return EndPayment2.newInstance("", "");
+                return EndPayment2.newInstance("", "", products, (EndPayment2.OnFragmentInteractionListener)parent);
             }
+        }
+        @Override
+        public int getItemPosition(Object object) {
+            Fragment fragment = (Fragment)object;
+            if (fragment instanceof UpdatePageFragment) {
+                ((UpdatePageFragment) fragment).updateAdapter();
+            }
+            return super.getItemPosition(object);
         }
 
         @Override
