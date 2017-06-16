@@ -25,7 +25,6 @@
         <item name="colorAccent">#FFFFFF</item>
         <item name="singleAccount">true</item>
         <item name="android:textColor">#ffffffff</item>
-
     </style>
     <!-- Master / Child Example -->
     <style name="MasterChild" parent="MaterialNavigationDrawerTheme.Light.DarkActionBar">
