@@ -28,6 +28,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
 
 import static android.content.ContentValues.TAG;
+import static android.graphics.Color.parseColor;
 
 /**
  * Created by naki_ on 12/13/2016.
@@ -167,7 +168,7 @@ public class TopSellerPieChart extends android.app.Fragment {
     private void queryData(String type){
 //        int numValues = 10;
         List<SliceValue> values = new ArrayList<SliceValue>();
-        String color[] = {"#f44336","#C2185B","#7B1FA2","#8BC34A","#FFEB3B"};
+        String color[] = {"#fec611","#d36331","#851818","#392419","#b6fcd5","#e2adf4","#f67a70","#5b5be5","#d41c1c","#d4aeb6"};
         JSONObject json = new JSONObject();
         JSONArray temp = ProductDBHelper.getInstance(TopSellerPieChart.this.getActivity()).getTopDetail(type);
         Log.d(TAG, "queryData: "+temp.length());
@@ -186,7 +187,7 @@ public class TopSellerPieChart extends android.app.Fragment {
             try {
 
 //                Log.d("check obj", );
-                SliceValue sliceValue = new SliceValue(temp.getJSONObject(i).getInt("qty"), ChartUtils.pickColor());
+                SliceValue sliceValue = new SliceValue(temp.getJSONObject(i).getInt("qty"), parseColor(color[i]));
                 sliceValue.setLabel((temp.getJSONObject(i).getString("name")+" "+ (int)sliceValue.getValue()));
                 values.add(sliceValue);
                 data = new PieChartData(values);
@@ -198,6 +199,7 @@ public class TopSellerPieChart extends android.app.Fragment {
                 data.setCenterText2("10 Best Sell");
                 data.setCenterText2Color(Color.WHITE);
                 chart.setPieChartData(data);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
