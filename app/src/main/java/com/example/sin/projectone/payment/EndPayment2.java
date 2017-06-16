@@ -135,7 +135,8 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                 float total = 0.0f;
                 try{
                     discount = Float.parseFloat(edt_discount.getText().toString());
-                    total = Float.parseFloat(text_total.getText().toString());
+                    //total = Float.parseFloat(text_total.getText().toString());
+                    total = getTotal();
                 }
                 catch (Exception e){
                     return;
@@ -181,10 +182,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                                 dialog2.dismiss();
                             }
                         }.start();
-
-
-                        ((Main)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_PAYMENT_MAIN)).reset();
-                        fragmentManager.popBackStack();
+                        mListener.onSuccessPayment();
                     }
 
                     @Override
@@ -220,6 +218,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
     @Override
     public void updateAdapter(){
         adapter.notifyDataSetChanged();
+        text_total.setText(String.valueOf(getTotal()));
     }
 
     /**
