@@ -22,7 +22,7 @@ public class Container extends Fragment{
         View view  = inflater.inflate(R.layout.fragment_item_container, container, false);
         String tag = Constant.TAG_FRAGMENT_ITEM_MAIN;
         Fragment newFragment = new Main();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         Fragment checkFragment = getFragmentManager().findFragmentByTag(tag);
         if(checkFragment!=null){
             transaction.remove(checkFragment);

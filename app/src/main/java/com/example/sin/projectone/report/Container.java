@@ -27,7 +27,7 @@ public class Container extends Fragment {
         Fragment newFragment = new Main();
 //        JSONArray transList = ProductDBHelper.getInstance(Container.this.getActivity()).getTrans();
 //        System.out.println(transList);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 // Replace whatever is in the fragment_container view with this fragment,
 // and add the transaction to the back stack if needed
         transaction.replace(R.id.fragment_report_container, newFragment,null);

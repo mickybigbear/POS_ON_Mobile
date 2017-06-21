@@ -99,10 +99,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Fragment containerFragment = fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_CONTAINER);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        }
+        else if (containerFragment.getChildFragmentManager().getBackStackEntryCount()>0) {
+            containerFragment.getChildFragmentManager().popBackStack();
         } else if(doubleBackToExitPressedOnce){
             super.onBackPressed();
         }else{
@@ -165,8 +167,9 @@ public class MainActivity extends AppCompatActivity
             toolbar.setTitle("Contact");
         }
         if(newFragment!=null){
+            String tag = Constant.TAG_FRAGMENT_CONTAINER;
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container_main, newFragment);
+            fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
 
             //fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
