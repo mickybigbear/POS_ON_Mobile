@@ -12,8 +12,8 @@ public class Constant {
 //    public static int SHOP_ID = 34;
 //    public static int USER_ID = 35; // debug test
 
-    public static int SHOP_ID;
-    public static int USER_ID; // debug test
+    public static int SHOP_ID = 0;
+    public static int USER_ID = 0; // debug test
 
     //Key json
     public final static String KEY_JSON_PRODUCTLIST = "productList";
@@ -42,7 +42,7 @@ public class Constant {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     //
     //url web Service
-    public final static String URL_SERVER                   = "http://192.168.43.14:3001";
+    public final static String URL_SERVER                   = "http://192.168.1.42:3001";
     public final static String URL_GET_ALL_PRODUCT          = URL_SERVER+"/api/product/";
     public final static String URL_SEND_TRANSACTION         = URL_SERVER+"/api/transaction/";
     public final static String URL_GET_TRANSACTION_DETAIL   = URL_SERVER+"/api/transactionDetail/";
@@ -91,6 +91,10 @@ public class Constant {
     // Key param
     public final static String KEY_REQUEST_PAREMS_PRODUCT_ADD = "key_request_param_product_add";
     public final static String KEY_REQUEST_PAREMS_PRODUCT_IMG_FILE = "key_request_param_img_product";
+
+    //Setting
+
+
 
     // other
     // path to /data/data/com.example.sin.projectone/app_productImg

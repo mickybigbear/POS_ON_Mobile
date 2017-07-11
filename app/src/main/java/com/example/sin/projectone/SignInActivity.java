@@ -3,7 +3,9 @@ package com.example.sin.projectone;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,11 +33,21 @@ public class SignInActivity extends AppCompatActivity {
     private EditText emailText;
     private EditText passText;
     private Button signInButton;
+    private UserManager mManager;
+
     ProgressDialog progress;
+//    final Context context = this.getApplicationContext();
     final int duration = Toast.LENGTH_SHORT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mManager  = new UserManager(this);
+        boolean checkSession = mManager.checkSession();
+
+        if(checkSession){
+            navigateToActivity(MainActivity.class);
+        }
+
         setContentView(R.layout.activity_sign_in);
         emailText = (EditText) findViewById(R.id.sign_in_email);
         passText = (EditText) findViewById(R.id.sign_in_password);
@@ -71,7 +83,6 @@ public class SignInActivity extends AppCompatActivity {
         if(!passwordValid(pass)){
             passText.setError(getString(R.string.sign_in_error_invalid_password));
             formValid = false;
-
             System.out.println("password invalid");
         }
         if(formValid){
@@ -87,7 +98,7 @@ public class SignInActivity extends AppCompatActivity {
     private boolean passwordValid(String password){
         int passLen = password.length();
         System.out.println(passLen);
-        return passLen>5 && passLen<17;
+        return passLen>5 && passLen<13;
     }
     private boolean emailValid(String email){
         System.out.println(email.contains("@"));
@@ -99,38 +110,43 @@ public class SignInActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("user",user);
         params.put("pass",pass);
-        final Context context = getApplicationContext();
-        final int duration = Toast.LENGTH_SHORT;
+
         HttpUtilsAsync.setTimeout(2);
         HttpUtilsAsync.post(Constant.URL_SERVER+"/api/user/", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     String res = (String) response.get("Message");
+
+                    Context context = getApplicationContext();
                     if(res.equals("Welcome new user !")){
-                        navigateToRegisterStore(user);
+                        navigateToActivity(RegisterStoreActivity.class);
                         CharSequence text = res;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
                     }
                     else if(res.equals("Welcome Back !")){
                         if(response.get("shopName").equals("null")){
-                            navigateToRegisterStore(user);
+                            navigateToActivity(RegisterStoreActivity.class);
                             CharSequence text = "Please create your shop or join in !";
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
                         }
                         else {
+                            Log.d("response", "onSuccess: "+response.toString());
                             String userID = response.get("userID").toString();
                             String shopID = response.get("shopID").toString();
+                            String type = response.get("type").toString();
                             System.out.println(userID);
                             System.out.println("======================================");
                             System.out.println(shopID);
                             Log.d("userID", userID);
                             Log.d("shopID", shopID);
+                            Log.d("type", type);
+                            mManager.saveSession(user, shopID, userID, type);
                             Constant.SHOP_ID = Integer.valueOf(shopID);
                             Constant.USER_ID = Integer.valueOf(userID);
-                            navigateToMainActivity(user);
+                            navigateToActivity(MainActivity.class);
                             CharSequence text = res;
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
@@ -152,7 +168,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 System.out.println(errorResponse + " " + statusCode);
                 CharSequence text = "Failed to connect with server";
-                Toast toast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
                 toast.show();
             }
             @Override
@@ -161,7 +177,7 @@ public class SignInActivity extends AppCompatActivity {
                 System.out.println("Failed: "+ ""+statusCode);
                 Log.d("Error : ", "" + throwable);
                 CharSequence text = "Failed to connect with server";
-                Toast toast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
                 toast.show();
             }
 
@@ -186,18 +202,14 @@ public class SignInActivity extends AppCompatActivity {
 //        });
 
     }
-    private void navigateToRegisterStore(String user){
-        Intent regisIntent = new Intent(getApplicationContext(),RegisterStoreActivity.class);
-        regisIntent.putExtra("username",user);
-        startActivity(regisIntent);
-    }
-    private void navigateToMainActivity(String user){
+
+    private void navigateToActivity(Class className){
         //Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
-        Intent mainIntent = new Intent(getApplicationContext(),MainActivity.class);
-        mainIntent.putExtra("username",user);
+        Intent mainIntent = new Intent(getApplicationContext(),className);
         startActivity(mainIntent);
         finish();
     }
+
     @Override
     public void onBackPressed(){
         flagCountDownExit = true;

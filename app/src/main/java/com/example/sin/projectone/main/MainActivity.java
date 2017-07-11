@@ -3,6 +3,7 @@ package com.example.sin.projectone.main;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +12,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,8 @@ import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.SignInActivity;
+import com.example.sin.projectone.UserManager;
 import com.example.sin.projectone.WebService;
 import com.example.sin.projectone.payment.MainPayment;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -38,18 +43,23 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fragmentManager;
     private String userName= "";
     private Toolbar toolbar;
+    private UserManager mManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.deleteDatabase(ProductDBHelper.DATABASE_NAME); // debug
-        int a = Constant.SHOP_ID;
+        mManager = new UserManager(this);
         loadProducts();
-        Intent intent = getIntent();
-        userName = intent.getStringExtra("username");
+        boolean checkSession = mManager.checkSession();
+
+        if(checkSession) {
+            userName = mManager.getValue("username");
+        }
         //setContentView(R.layout.content_main);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -165,6 +175,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_contact) {
             newFragment = new com.example.sin.projectone.help.Main();
             toolbar.setTitle("Contact");
+        } else if (id == R.id.nav_logout){
+            mManager.clearSession();
+            openActivity(SignInActivity.class);
         }
         if(newFragment!=null){
             String tag = Constant.TAG_FRAGMENT_CONTAINER;
@@ -244,6 +257,31 @@ public class MainActivity extends AppCompatActivity
             }
         });
         return true;
+    }
+
+    private void openActivity(final Class className){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        Intent mainIntent = new Intent(getApplicationContext(), className);
+                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mainIntent);
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
 
