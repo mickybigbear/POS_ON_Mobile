@@ -7,32 +7,13 @@
     android:weightSum="1">
 
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:maxHeight="300dp"
-                app:srcCompat="@drawable/ic_menu_gallery"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="20dp"
-                android:id="@+id/img_product" />
-        </RelativeLayout>
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5">
+        android:layout_weight="0.9">
+
 
 
         <LinearLayout
@@ -41,7 +22,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5">
 
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1">
 
+                <ImageView
+                    android:id="@+id/img_product"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
+                    android:maxHeight="300dp"
+                    app:srcCompat="@drawable/ic_menu_gallery" />
+            </RelativeLayout>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -208,32 +203,20 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2">
+        android:layout_weight="0.1">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <Button
-                android:text="@string/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_cancel"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="50dp"
-                android:layout_marginBottom="30dp"/>
-
-            <Button
                 android:text="@string/btn_add"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_add"
-                android:layout_marginRight="50dp"
-                android:layout_alignBaseline="@+id/btn_cancel"
-                android:layout_alignBottom="@+id/btn_cancel"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="50dp" />
+                android:layout_margin="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </LinearLayout>
 

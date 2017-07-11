@@ -28,6 +28,7 @@ import com.example.sin.projectone.R;
 import com.example.sin.projectone.SignInActivity;
 import com.example.sin.projectone.UserManager;
 import com.example.sin.projectone.WebService;
+import com.example.sin.projectone.item.MainItem;
 import com.example.sin.projectone.payment.MainPayment;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -38,7 +39,7 @@ import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, MainItem.OnFragmentInteractionListener{
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentManager fragmentManager;
     private String userName= "";
@@ -110,12 +111,19 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Fragment containerFragment = fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_CONTAINER);
+        int childFragmentStack = 0;
+        int fragmentStack = getFragmentManager().getBackStackEntryCount();
+        if(containerFragment!=null){
+            childFragmentStack = containerFragment.getChildFragmentManager().getBackStackEntryCount();
+        }
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (containerFragment.getChildFragmentManager().getBackStackEntryCount()>0) {
+        } else if(childFragmentStack>0){
             containerFragment.getChildFragmentManager().popBackStack();
-        } else if(doubleBackToExitPressedOnce){
+        } else if(fragmentStack>0){
+            getFragmentManager().popBackStack();
+        }
+        else if(doubleBackToExitPressedOnce){
             super.onBackPressed();
         }else{
             this.doubleBackToExitPressedOnce = true;
@@ -165,7 +173,8 @@ public class MainActivity extends AppCompatActivity
             toolbar.setTitle("Payment");
             newFragment = new MainPayment();
         } else if (id == R.id.nav_product) {
-            newFragment = new com.example.sin.projectone.item.Container();
+            //newFragment = new com.example.sin.projectone.item.Container();
+            newFragment = new MainItem();
             toolbar.setTitle("Product");
         } else if (id == R.id.nav_report) {
             newFragment = new com.example.sin.projectone.report.Container();
@@ -180,6 +189,7 @@ public class MainActivity extends AppCompatActivity
             openActivity(SignInActivity.class);
         }
         if(newFragment!=null){
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             String tag = Constant.TAG_FRAGMENT_CONTAINER;
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
@@ -193,6 +203,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     private boolean loadProducts(){
         WebService.getAllProduct(new JsonHttpResponseHandler(){
@@ -285,4 +296,19 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onRepleceFragment(Fragment newFragment, Bundle bundle) {
+        if(newFragment!=null){
+            String tag = Constant.TAG_FRAGMENT_CONTAINER;
+            newFragment.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
+    private void clearBackStackFragment(){
+
+    }
 }

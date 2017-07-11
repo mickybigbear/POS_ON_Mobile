@@ -1,9 +1,10 @@
 package com.example.sin.projectone.item;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.R;
 
 /**
@@ -23,7 +25,8 @@ import com.example.sin.projectone.R;
  * Use the {@link MainItem#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainItem extends Fragment implements TabLayout.OnTabSelectedListener{
+public class MainItem extends Fragment implements TabLayout.OnTabSelectedListener, ViewProduct2.OnFragmentInteractionListener
+, AddProduct2.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,11 +36,10 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    private OnFragmentInteractionListener mListener;
 
     public MainItem() {
         // Required empty public constructor
@@ -86,7 +88,7 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
 
         // Inflate the layout for this fragment
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), this);
         mViewPager = (ViewPager) view.findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -94,11 +96,7 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -107,6 +105,17 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        if (activity instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -132,6 +141,18 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
 
     }
 
+    @Override
+    public void onFragmentChange(Fragment newFragment, Bundle bundle) {
+        //mListener.onRepleceFragment(newFragment, bundle);
+        String tag = Constant.TAG_FRAGMENT_CONTAINER;
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        newFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.fragment_container_main, newFragment, tag);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -144,27 +165,29 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onRepleceFragment(Fragment fragment, Bundle bundle);
+
     }
 
 
 
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private int numPage = 0;
-
-        public SectionsPagerAdapter(FragmentManager fm, int numPage) {
+        Fragment parent;
+        public SectionsPagerAdapter(FragmentManager fm, int numPage,Fragment parent) {
             super(fm);
             this.numPage = numPage;
+            this.parent = parent;
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
                 //return ScanPayment2.newInstance("", "", (ScanPayment2.OnFragmentInteractionListener)parent);
-                return  ViewProduct2.newInstance("","");
+                return  ViewProduct2.newInstance("","", (ViewProduct2.OnFragmentInteractionListener)parent);
             } else {
                 //return EndPayment2.newInstance("", "", basketProduct, (EndPayment2.OnFragmentInteractionListener)parent);
-                return AddProduct2.newInstance("","");
+                return AddProduct2.newInstance("","",(AddProduct2.OnFragmentInteractionListener)parent);
             }
         }
 

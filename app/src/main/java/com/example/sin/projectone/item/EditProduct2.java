@@ -137,7 +137,7 @@ public class EditProduct2 extends Fragment {
                                     try {//new StringEntity(data, "UTF-8");
                                         JSONObject jsonObject = new JSONObject(new String(responseBody));
                                         ProductDBHelper.getInstance(getActivity()).UpdateProduct(jsonObject); // update db
-                                        ((ViewProduct2)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_VIEW)).updatePage();
+                                        //((ViewProduct2)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_VIEW)).updatePage();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
