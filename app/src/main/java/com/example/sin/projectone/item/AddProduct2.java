@@ -226,17 +226,6 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
         };
     }
 
-//    private View.OnClickListener onBackClick(){
-//        return new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.remove(AddProduct2.this).commit();
-//                fragmentManager.popBackStack();
-//            }
-//        };
-//    }
-
     private ImageView.OnClickListener onImgClick(){
         return new View.OnClickListener() {
             @Override

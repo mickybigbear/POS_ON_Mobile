@@ -171,28 +171,26 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_payment) {
-             //newFragment = new com.example.sin.projectone.payment.Container();
-            toolbar.setTitle("Payment");
+            toolbar.setTitle(getString(R.string.payment));
             newFragment = new MainPayment();
         } else if (id == R.id.nav_product) {
-            //newFragment = new com.example.sin.projectone.item.Container();
             newFragment = new MainItem();
-            toolbar.setTitle("Product");
+            toolbar.setTitle(getString(R.string.items));
         } else if (id == R.id.nav_report) {
             newFragment = new com.example.sin.projectone.report.Container();
-            toolbar.setTitle("Report");
+            toolbar.setTitle(getString(R.string.reports));
         } else if (id == R.id.nav_receipt) {
             newFragment = new com.example.sin.projectone.receipt.Container();
+            toolbar.setTitle(getString(R.string.receipts));
         } else if (id == R.id.nav_contact) {
             newFragment = new com.example.sin.projectone.help.Main();
-            toolbar.setTitle("Contact");
+            toolbar.setTitle(getString(R.string.contact_us));
         } else if (id == R.id.nav_logout){
             mManager.clearSession();
             openActivity(SignInActivity.class);
         } else if (id == R.id.nav_setting){
             intent.setClass(this, SettingsActivity2.class);
             startActivity(intent);
-            toolbar.setTitle("Contact");
         }
         if(newFragment!=null){
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

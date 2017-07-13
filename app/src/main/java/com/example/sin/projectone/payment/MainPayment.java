@@ -181,6 +181,11 @@ EndPayment2.OnFragmentInteractionListener{
         mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onFailurePayment() {
+
+    }
+
 
 //    /**
 //     * This interface must be implemented by activities that contain this
@@ -241,4 +246,6 @@ EndPayment2.OnFragmentInteractionListener{
             return null;
         }
     }
+
+
 }

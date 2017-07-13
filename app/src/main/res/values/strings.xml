@@ -126,5 +126,15 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
+    <!-- TODO: Title name on menu bar -->
+    <string name="payment">Payment</string>
+    <string name="items">Items</string>
+    <string name="reports">Reports</string>
+    <string name="receipts">Receipts</string>
+    <string name="logout">Logout</string>
+    <string name="shop">Shop</string>
+    <string name="setting">Setting</string>
+    <string name="contact_us">Contact us</string>
+
 
 </resources>
