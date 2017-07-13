@@ -26,9 +26,6 @@
             android:name=".RegisterStoreActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".MainNav"
-            android:screenOrientation="portrait"></activity>
-        <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

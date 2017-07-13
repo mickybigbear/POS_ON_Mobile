@@ -206,9 +206,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         progress.dismiss();
-                        ((Main)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_PAYMENT_MAIN)).reset();
-                        fragmentManager.popBackStack();
-
+                        mListener.onFailurePayment();
                     }
                 },transaction);
 
@@ -265,6 +263,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onSuccessPayment();
+        void onFailurePayment();
     }
     private float getTotal(){
         float total = 0;

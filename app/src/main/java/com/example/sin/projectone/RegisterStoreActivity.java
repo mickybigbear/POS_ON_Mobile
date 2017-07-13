@@ -15,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.sin.projectone.main.MainActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -124,7 +125,7 @@ public class RegisterStoreActivity extends AppCompatActivity {
                         Log.d("shopID", shopID);
                         Constant.SHOP_ID = Integer.valueOf(shopID);
                         Constant.USER_ID = Integer.valueOf(userID);
-                        Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
+                        Intent mainIntent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(mainIntent);
                     }
                 } catch (JSONException e) {
