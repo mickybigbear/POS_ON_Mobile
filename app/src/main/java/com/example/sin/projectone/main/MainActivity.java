@@ -30,6 +30,8 @@ import com.example.sin.projectone.UserManager;
 import com.example.sin.projectone.WebService;
 import com.example.sin.projectone.item.MainItem;
 import com.example.sin.projectone.payment.MainPayment;
+import com.example.sin.projectone.setting.SettingsActivity;
+import com.example.sin.projectone.setting.SettingsActivity2;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
+        Intent intent = new Intent();
         Fragment newFragment = null;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -188,8 +190,9 @@ public class MainActivity extends AppCompatActivity
             mManager.clearSession();
             openActivity(SignInActivity.class);
         } else if (id == R.id.nav_setting){
-            newFragment = new com.example.sin.projectone.setting.Container();
-            toolbar.setTitle("Setting");
+            intent.setClass(this, SettingsActivity2.class);
+            startActivity(intent);
+            toolbar.setTitle("Contact");
         }
         if(newFragment!=null){
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

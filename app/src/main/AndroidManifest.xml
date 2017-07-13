@@ -16,18 +16,18 @@
             android:name=".SignInActivity"
             android:screenOrientation="portrait">
 
-             <!--<intent-filter>-->
-             <!--<action android:name="android.intent.action.MAIN" />-->
-             <!--<category android:name="android.intent.category.LAUNCHER" />-->
-             <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
 
         </activity>
         <activity
             android:name=".RegisterStoreActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainNav"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait">
@@ -36,6 +36,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".setting.SettingsActivity2"
+            android:label="@string/title_activity_settings2"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/SettingTheme" >
         </activity>
     </application>
 

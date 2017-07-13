@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.R;
-import com.example.sin.projectone.receipt.list_fragment;
 
 /**
  * Created by naki_ on 7/13/2017.
@@ -24,15 +23,12 @@ public class Container extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_setting_container, container, false);
 
-        Fragment newFragment = new list_fragment();
+        Fragment newFragment = new Main();
 //        JSONArray transList = ProductDBHelper.getInstance(Container.this.getActivity()).getTrans();
 //        System.out.println(transList);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack if needed
-        transaction.replace(R.id.fragment_receipt_container, newFragment, Constant.TAG_FRAGMENT_RECEIPT_MAIN);
-// Commit the transaction
-        transaction.commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_setting_container, new SettingsFragment())
+                .commit();
         return view;
     }
 }
