@@ -20,12 +20,16 @@
             android:title="Receipt" />
     </group>
 
-    <item android:title="Support">
+    <item android:title="Help &amp; Setting">
         <menu>
             <item
                 android:id="@+id/nav_contact"
                 android:icon="@android:drawable/ic_dialog_email"
                 android:title="Contact us" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_power_settings_new_black_24dp"
+                android:title="Log out"/>
         </menu>
     </item>
 
