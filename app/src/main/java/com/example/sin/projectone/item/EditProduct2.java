@@ -76,7 +76,7 @@ public class EditProduct2 extends Fragment {
         edt_p_detail.setText(products.details);
         text_product_type.setText(products.type);
 
-        Bitmap img = ImgManager.getinstance().loadImageFromStorage(products.imgName);
+        Bitmap img = ImgManager.getInstance().loadImageFromStorage(products.imgName);
         if(img!=null){
             img_product.setImageBitmap(img);
         }

@@ -46,7 +46,7 @@ public class ProductPaymentDialog extends DialogFragment {
         text_p_name.setText(product.name);
         text_p_price.setText(product.price);
         edt_p_qty.setText(String.valueOf(product.qty));
-        Bitmap img = ImgManager.getinstance().loadImageFromStorage(product.imgName);
+        Bitmap img = ImgManager.getInstance().loadImageFromStorage(product.imgName);
         if(img!=null){
             img_product.setImageBitmap(img);
         }

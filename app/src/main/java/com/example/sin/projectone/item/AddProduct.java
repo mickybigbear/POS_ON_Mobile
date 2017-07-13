@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -58,7 +57,7 @@ public class AddProduct extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_add, container, false);
         fragmentManager = getFragmentManager();
-        imgManager = ImgManager.getinstance();
+        imgManager = ImgManager.getInstance();
         btn_back = (Button) view.findViewById(R.id.btn_cancel);
         btn_add = (Button) view.findViewById(R.id.btn_add);
 

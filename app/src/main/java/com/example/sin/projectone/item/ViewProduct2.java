@@ -149,27 +149,9 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
             @Override
             public void onClick(View v) {
                 productDetailDialog.dismiss();
-
                 Bundle productBundle = new Bundle();
                 productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, ViewProduct2.this.targetProduct);
                 mListener.onFragmentChange(new EditProduct2(), productBundle);
-
-//                if(newFragment!=null){
-//                    String tag = Constant.TAG_FRAGMENT_CONTAINER;
-//                    newFragment.setArguments(bundle);
-//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                    fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                }
-
-//                String tag = Constant.TAG_FRAGMENT_CONTAINER;
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                Fragment editProduct = new EditProduct();
-//                editProduct.setArguments(productBundle);
-//                fragmentTransaction.replace(R.id.fragment_container_main, editProduct, tag);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
             }
         };
     }

@@ -29,6 +29,10 @@
     <string name="register_store_radio_owner">Owner</string>
     <string name="register_store_radio_emp">Employee</string>
     <string name="register_store_button_register_store">Register store</string>
+    <string name="add_product_finish">ADD Product Finish</string>
+    <string name="finished_sending_data">Finished sending data</string>
+    <string name="can_not_connect_server">Can not connect server</string>
+    <string name="error_sending_data">Error sending data</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -44,5 +48,6 @@
     <string name="title_activity_main3">Main3</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
 
 </resources>
