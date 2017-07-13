@@ -187,6 +187,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout){
             mManager.clearSession();
             openActivity(SignInActivity.class);
+        } else if (id == R.id.nav_setting){
+            newFragment = new com.example.sin.projectone.setting.Container();
+            toolbar.setTitle("Setting");
         }
         if(newFragment!=null){
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

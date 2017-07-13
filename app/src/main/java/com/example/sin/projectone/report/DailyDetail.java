@@ -28,7 +28,7 @@ public class DailyDetail extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_report_daily_detail, container, false);
         String createAt = getArguments().getString("createAt");
-        JSONObject json = new JSONObject();
+        JSONObject json;
         String totalTxt = "";
         String discTxt="";
         try {
