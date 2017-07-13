@@ -87,7 +87,6 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
         tabLayout.addOnTabSelectedListener(this);
 
         // Inflate the layout for this fragment
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), this);
         mViewPager = (ViewPager) view.findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -183,10 +182,8 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                //return ScanPayment2.newInstance("", "", (ScanPayment2.OnFragmentInteractionListener)parent);
                 return  ViewProduct2.newInstance("","", (ViewProduct2.OnFragmentInteractionListener)parent);
             } else {
-                //return EndPayment2.newInstance("", "", basketProduct, (EndPayment2.OnFragmentInteractionListener)parent);
                 return AddProduct2.newInstance("","",(AddProduct2.OnFragmentInteractionListener)parent);
             }
         }
