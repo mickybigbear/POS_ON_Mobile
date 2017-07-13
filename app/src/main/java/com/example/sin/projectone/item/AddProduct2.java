@@ -1,14 +1,11 @@
 package com.example.sin.projectone.item;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -106,8 +103,7 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_item_add2, container, false);
         fragmentManager = getFragmentManager();
-        imgManager = ImgManager.getinstance();
-        //btn_back = (Button) view.findViewById(R.id.btn_cancel);
+        imgManager = ImgManager.getInstance();
         btn_add = (Button) view.findViewById(R.id.btn_add);
 
         edt_p_name = (EditText) view.findViewById(R.id.edt_text_product_name);
@@ -177,6 +173,8 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
                             "Please wait ...", true);
 
                     WebService.sendAddProduct(new AsyncHttpResponseHandler() {
+                        final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
+                        Bundle bundleDialog = new Bundle();
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             try { // insert data , save img
@@ -191,23 +189,16 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
                             }
 
                             progress.dismiss();
-                            final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
-                            Bundle b = new Bundle();
-                            b.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,"ADD Product Finish");
-                            b.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, "Finished sending data");
-                            b.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
-                            final MessageAlertDialog dialog2 = MessageAlertDialog.newInstance(b);
-                            dialog2.show(fragmentManager,tag);
+                            bundleDialog.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,getString(R.string.add_product_finish));
+                            bundleDialog.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, getString(R.string.finished_sending_data));
+                            bundleDialog.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
+                            final MessageAlertDialog dialogSuccess = MessageAlertDialog.newInstance(bundleDialog);
+                            dialogSuccess.show(fragmentManager,tag);
                             new CountDownTimer(3000, 1000) {
                                 @Override
-                                public void onTick(long millisUntilFinished) {
-                                    // TODO Auto-generated method stub
-                                }
+                                public void onTick(long millisUntilFinished) {}
                                 @Override
-                                public void onFinish() {
-                                    // TODO Auto-generated method stub
-                                    dialog2.dismiss();
-                                }
+                                public void onFinish() {dialogSuccess.dismiss(); }
                             }.start();
                             reset();
                         }
@@ -215,9 +206,17 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
                         @Override
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                             progress.dismiss();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.remove(AddProduct2.this).commit();
-                            fragmentManager.popBackStack();
+                            bundleDialog.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,getString(R.string.can_not_connect_server));
+                            bundleDialog.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, getString(R.string.error_sending_data));
+                            bundleDialog.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
+                            final MessageAlertDialog dialogFailure = MessageAlertDialog.newInstance(bundleDialog);
+                            dialogFailure.show(fragmentManager,tag);
+                            new CountDownTimer(3000, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {}
+                                @Override
+                                public void onFinish() {dialogFailure.dismiss();}
+                            }.start();
                         }
                     }, JsonProduct,imgProduct);
                 }catch (Exception e){

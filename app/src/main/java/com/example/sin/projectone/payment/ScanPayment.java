@@ -103,7 +103,7 @@ public class ScanPayment extends Fragment implements ZXingScannerView.ResultHand
         if (requestCode == Constant.REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            String path = (ImgManager.getinstance().saveImgToInternalStorage(imageBitmap,"1010.png")).getAbsolutePath();
+            String path = (ImgManager.getInstance().saveImgToInternalStorage(imageBitmap,"1010.png")).getAbsolutePath();
             System.out.println("Result :"+path);
         }
     }
@@ -129,7 +129,7 @@ public class ScanPayment extends Fragment implements ZXingScannerView.ResultHand
             product.qty = buyCount;
             tryAdd = main.addProductPayment(product);
             if(tryAdd>0){
-                Bitmap img = ImgManager.getinstance().loadImageFromStorage(product.imgName);
+                Bitmap img = ImgManager.getInstance().loadImageFromStorage(product.imgName);
                 if(img!=null){
                     setProductImg(img);
                 }

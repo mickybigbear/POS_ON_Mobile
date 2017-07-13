@@ -66,7 +66,7 @@ public class ProductDetailDialog extends DialogFragment {
         text_detail.setText(product.details);
 
         String fileName = product.imgName;
-        Bitmap img =  ImgManager.getinstance().loadImageFromStorage(fileName);
+        Bitmap img =  ImgManager.getInstance().loadImageFromStorage(fileName);
         if(img!=null){
             img_product.setImageBitmap(img);
         }

@@ -27,7 +27,7 @@ public class ImgManager {
 
     }
 
-    public static ImgManager getinstance(){
+    public static ImgManager getInstance(){
         if(imgManager==null){
             imgManager = new ImgManager();
         }

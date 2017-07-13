@@ -67,7 +67,7 @@ public class ProductAdapter extends ArrayAdapter<Product> {
                 productdetail.setText(product.details);
             }
             if(productImg!=null){
-                productImg.setImageBitmap(ImgManager.getinstance().loadImageFromStorage(product.imgName));
+                productImg.setImageBitmap(ImgManager.getInstance().loadImageFromStorage(product.imgName));
             }
 
         }
