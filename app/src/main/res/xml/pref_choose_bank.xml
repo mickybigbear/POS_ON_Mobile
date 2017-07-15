@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="payment_method_ktb"
+        android:title="@string/pref_payment_ktb"/>
+    <Preference
+        android:key="payment_method_kplus"
+        android:title="@string/pref_payment_kplus"/>
+
+</PreferenceScreen>

@@ -16,7 +16,7 @@ public class SettingsFragment extends PreferenceFragment {
 
 //        String settings = getArguments().getString("settings");
 //        if ("notifications".equals(settings)) {
-            addPreferencesFromResource(R.xml.payment_method);
+            addPreferencesFromResource(R.xml.pref_payment_method);
 //        }
 //        else if ("sync".equals(settings)) {
 //            addPreferencesFromResource(R.xml.settings_sync);

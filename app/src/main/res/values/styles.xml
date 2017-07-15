@@ -16,7 +16,7 @@
         <!--<item name="android:textColorSecondary">#757575</item>-->
     </style>
 
-    <style name="SettingTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SettingTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="android:statusBarColor">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

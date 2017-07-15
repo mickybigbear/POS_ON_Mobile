@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.example.sin.projectone.WebService;
 import com.example.sin.projectone.item.MainItem;
 import com.example.sin.projectone.payment.MainPayment;
 import com.example.sin.projectone.setting.SettingsActivity;
-import com.example.sin.projectone.setting.SettingsActivity2;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -186,10 +184,9 @@ public class MainActivity extends AppCompatActivity
             newFragment = new com.example.sin.projectone.help.Main();
             toolbar.setTitle(getString(R.string.contact_us));
         } else if (id == R.id.nav_logout){
-            mManager.clearSession();
             openActivity(SignInActivity.class);
         } else if (id == R.id.nav_setting){
-            intent.setClass(this, SettingsActivity2.class);
+            intent.setClass(this, SettingsActivity.class);
             startActivity(intent);
         }
         if(newFragment!=null){
@@ -283,6 +280,7 @@ public class MainActivity extends AppCompatActivity
                         //Yes button clicked
                         Intent mainIntent = new Intent(getApplicationContext(), className);
                         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        mManager.clearSession();
                         startActivity(mainIntent);
                         finish();
                         break;

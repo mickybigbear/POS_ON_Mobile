@@ -55,7 +55,7 @@
     <string name="title_activity_settings2">Settings</string>
 
     <!-- Strings related to Settings -->
-
+    <string name="pref_header_payment_method">Payment method</string>
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
@@ -116,9 +116,20 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
+    <!--setting for Payment Method-->
+    <string name="pref_header_paypal">Paypal</string>
+    <string name="pref_title_paypal_link">Your Paypal link</string>
+    <string name="pref_default_paypal_link">your Paypal.me or Paypal button</string>
+    <string name="pref_qrcode_status">QR code was set</string>
+    <string name="pref_title_status">Enable</string>
+    <string name="pref_title_qrcode_help">How to set QR code</string>
+
+    <!--setting for Choose Bank-->
+    <string name="pref_payment_ktb">KTB Net bank (Krung Thai Bank)</string>
+    <string name="pref_payment_kplus">K Plus (Kasikorn bank)</string>
+
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
-
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
@@ -135,6 +146,13 @@
     <string name="shop">Shop</string>
     <string name="setting">Setting</string>
     <string name="contact_us">Contact us</string>
+    <string name="title_activity_choose_bank_qrcode">Choose method</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
+    <!--<string name="app_name">Effective Navigation</string>-->
 
+    <string name="dummy_section_text">Section %1d is just a dummy section.</string>
+
+    <string name="demo_external_activity">Demo External Activity</string>
+    <string name="demo_collection">Demo Collection</string>
 </resources>

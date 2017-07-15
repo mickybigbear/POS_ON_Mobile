@@ -2,9 +2,13 @@ package com.example.sin.projectone.setting;
 
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -18,10 +22,15 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +44,8 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity2 extends AppCompatPreferenceActivity {
+public class ChooseMethodActivity extends AppCompatPreferenceActivity {
+    private ImgManager imgManager;
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -121,23 +131,38 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.pref_choose_bank);
         setupActionBar();
-    }
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case android.R.id.home:
-                //DO WHAT YOU WANT WHEN YOU HIT UP BUTTON
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        imgManager = ImgManager.getInstance();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent); // Handle text being sent
+            } else if (type.startsWith("image/")) {
+                bindOnClickToPreference("payment_method_ktb", "ktb_qrcode", intent, this);
+                bindOnClickToPreference("payment_method_kplus", "kbank_qrcode", intent, this);
+//                handleSendImage(intent);
+                // Handle single image being sent
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                handleSendMultipleImages(intent);
+                // Handle multiple images being sent
+            }
+        } else {
+            // Handle other intents, such as being started from the home screen
         }
     }
+
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
+        setTitle("Choose method");
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -152,14 +177,60 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
         return isXLargeTablet(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
 
+    public void bindOnClickToPreference(String prefName, final String methodName, final Intent intent, final Context context){
+        Preference pref = findPreference(prefName);
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final DialogInterface.OnClickListener dialogOKClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+//                        Intent mainIntent = new Intent(getApplicationContext(), className);
+//                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        mManager.clearSession();
+//                        startActivity(mainIntent);
+//                        finish();
+                        break;
+
+                }
+            }
+        };
+
+// 2. Chain together various setter methods to set the dialog characteristics
+
+
+// 3. Get the AlertDialog from create()
+        pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                Toast.makeText(getApplicationContext(), methodName, Toast.LENGTH_SHORT).show();
+                Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                if (imageUri != null) {
+                    String TAG = "imhRI";
+                    Log.d(TAG, "handleSendImage: "+imageUri.getPath());
+                    Log.d(TAG, "handleSendImage: "+imageUri.getUserInfo());
+                    Log.d(TAG, "handleSendImage: "+imageUri.getHost());
+                    if(imgManager.checkImageName(methodName)){
+                        builder.setMessage("Done")
+                                .setTitle("title")
+                                .setCancelable(true)
+
+                                .setPositiveButton("ok", dialogOKClickListener)
+                                .show();
+                    }
+                    else{
+                        imgManager.saveImgURIToInternalStorage(imageUri, methodName, context);
+                    }
+                    // Update UI to reflect image being shared
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -167,100 +238,40 @@ public class SettingsActivity2 extends AppCompatPreferenceActivity {
      * Make sure to deny any unknown fragments here.
      */
     protected boolean isValidFragment(String fragmentName) {
-        return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+        return PreferenceFragment.class.getName().equals(fragmentName);
     }
 
+    void handleSendText(Intent intent) {
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (sharedText != null) {
+            // Update UI to reflect text being shared
+        }
+    }
+    void handleSendImage(Intent intent) {
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            String TAG = "imhRI";
+            Log.d(TAG, "handleSendImage: "+imageUri.getPath());
+            Log.d(TAG, "handleSendImage: "+imageUri.getUserInfo());
+            Log.d(TAG, "handleSendImage: "+imageUri.getHost());
+            imgManager.saveImgURIToInternalStorage(imageUri, "xxxx", this);
+            Bitmap myBitmap = imgManager.loadImageFromStorage("xxxx");
+            ImageView myImage = (ImageView) findViewById(R.id.imageviewTest);
+
+            myImage.setImageBitmap(myBitmap);
+            // Update UI to reflect image being shared
+        }
+    }
+
+    void handleSendMultipleImages(Intent intent) {
+        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (imageUris != null) {
+            // Update UI to reflect multiple images being shared
+        }
+    }
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class GeneralPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity2.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity2.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    /**
-     * This fragment shows data and sync preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class DataSyncPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_data_sync);
-            setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
-        }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-            if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity2.class));
-                return true;
-            }
-            return super.onOptionsItemSelected(item);
-        }
-    }
 }

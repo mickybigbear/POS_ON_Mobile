@@ -35,10 +35,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".setting.SettingsActivity2"
-            android:label="@string/title_activity_settings2"
+            android:name=".setting.SettingsActivity"
             android:parentActivityName=".main.MainActivity"
-            android:theme="@style/SettingTheme" >
+            android:theme="@style/SettingTheme"></activity>
+        <activity android:name=".setting.SaveQRCode"></activity>
+        <activity
+            android:name=".setting.ChooseMethodActivity"
+            android:theme="@style/SettingTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+                <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            </intent-filter>
         </activity>
     </application>
 

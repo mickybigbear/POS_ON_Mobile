@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="PAYPAL"
+        android:key="pref_key_storage_settings">
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/pref_default_paypal_link"
+            android:inputType="textUri"
+            android:key="paypal_link"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_default_paypal_link"
+            android:title="@string/pref_title_paypal_link" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="paypal_status"
+            android:title="@string/pref_title_status" />
+    </PreferenceCategory>
+
+    <Preference layout="@layout/pref_divider" />
+
+    <PreferenceCategory
+        android:title="@string/pref_payment_ktb"
+        android:key="pref_key_storage_settings">
+        <Preference
+            android:title="@string/pref_title_qrcode_help"
+            android:key="kb_qrcode_help"/>
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="kb_qrcode_status"
+            android:selectable="false"
+            android:title="@string/pref_qrcode_status" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="ktb_status"
+            android:title="@string/pref_title_status" />
+    </PreferenceCategory>
+
+    <Preference layout="@layout/pref_divider" />
+
+    <PreferenceCategory
+        android:title="@string/pref_payment_kplus"
+        android:key="pref_key_storage_settings">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="kbank_qrcode_status"
+            android:selectable="false"
+            android:title="@string/pref_qrcode_status" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="kbank_status"
+            android:title="@string/pref_title_status" />
+    </PreferenceCategory>
+</PreferenceScreen>
