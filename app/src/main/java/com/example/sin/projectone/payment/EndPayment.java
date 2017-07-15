@@ -39,12 +39,12 @@ import cz.msebera.android.httpclient.Header;
 ///**
 // * A simple {@link Fragment} subclass.
 // * Activities that contain this fragment must implement the
-// * {@link EndPayment2.OnFragmentInteractionListener} interface
+// * {@link EndPayment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
-// * Use the {@link EndPayment2#newInstance} factory method to
+// * Use the {@link EndPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class EndPayment2 extends Fragment implements UpdatePageFragment{
+public class EndPayment extends Fragment implements UpdatePageFragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,7 +64,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
 
     private OnFragmentInteractionListener mListener;
 
-    public EndPayment2() {
+    public EndPayment() {
         // Required empty public constructor
     }
 
@@ -74,11 +74,11 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EndPayment2.
+     * @return A new instance of fragment EndPayment.
      */
     // TODO: Rename and change types and number of parameters
-//    public static EndPayment2 newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
-//        EndPayment2 fragment = new EndPayment2();
+//    public static EndPayment newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+//        EndPayment fragment = new EndPayment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
@@ -89,8 +89,8 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
 //        return fragment;
 //    }
 
-    public static EndPayment2 newInstance(String param1, String param2, ArrayList<Product> products, OnFragmentInteractionListener mListener) {
-        EndPayment2 fragment = new EndPayment2();
+    public static EndPayment newInstance(String param1, String param2, ArrayList<Product> products, OnFragmentInteractionListener mListener) {
+        EndPayment fragment = new EndPayment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -145,7 +145,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                     }
                 }
                 final FragmentManager fragmentManager = getFragmentManager();
-                final ProgressDialog progress = ProgressDialog.show(EndPayment2.this.getActivity(), "Loading",
+                final ProgressDialog progress = ProgressDialog.show(EndPayment.this.getActivity(), "Loading",
                         "Please wait ...", true);
 
                 String detail = "";
@@ -291,7 +291,7 @@ public class EndPayment2 extends Fragment implements UpdatePageFragment{
                 }
                 Product product = adapter.getItem(position);
                 ProductPaymentDialog productPaymentDialog =  ProductPaymentDialog.newInstance(product);
-                productPaymentDialog.setTargetFragment(EndPayment2.this, Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG);
+                productPaymentDialog.setTargetFragment(EndPayment.this, Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG);
                 productPaymentDialog.show(fragmentManager, tag);
             }
         };

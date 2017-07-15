@@ -18,12 +18,12 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 ///**
 // * A simple {@link Fragment} subclass.
 // * Activities that contain this fragment must implement the
-// * {@link ScanPayment2.OnFragmentInteractionListener} interface
+// * {@link ScanPayment.OnFragmentInteractionListener} interface
 // * to handle interaction events.
-// * Use the {@link ScanPayment2#newInstance} factory method to
+// * Use the {@link ScanPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHandler {
+public class ScanPayment extends Fragment implements ZXingScannerView.ResultHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +38,7 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
     private boolean mFlash;
     private ToneGenerator toneG;
 
-    public ScanPayment2() {
+    public ScanPayment() {
         // Required empty public constructor
     }
 
@@ -48,11 +48,11 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ScanPayment2.
+     * @return A new instance of fragment ScanPayment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ScanPayment2 newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
-        ScanPayment2 fragment = new ScanPayment2();
+    public static ScanPayment newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+        ScanPayment fragment = new ScanPayment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,8 +63,8 @@ public class ScanPayment2 extends Fragment implements ZXingScannerView.ResultHan
         return fragment;
     }
 
-    public static ScanPayment2 newInstance(String param1, String param2) {
-        ScanPayment2 fragment = new ScanPayment2();
+    public static ScanPayment newInstance(String param1, String param2) {
+        ScanPayment fragment = new ScanPayment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

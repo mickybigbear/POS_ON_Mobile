@@ -38,12 +38,12 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddProduct2.OnFragmentInteractionListener} interface
+ * {@link AddProduct.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddProduct2#newInstance} factory method to
+ * Use the {@link AddProduct#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddProduct2 extends Fragment implements UpdatePageFragment {
+public class AddProduct extends Fragment implements UpdatePageFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,7 +65,7 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
     private ImageButton btn_scan;
     private String lastBarcodeResult="";
 
-    public AddProduct2() {
+    public AddProduct() {
         // Required empty public constructor
     }
 
@@ -75,11 +75,11 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddProduct2.
+     * @return A new instance of fragment AddProduct.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddProduct2 newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
-        AddProduct2 fragment = new AddProduct2();
+    public static AddProduct newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+        AddProduct fragment = new AddProduct();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -136,19 +136,19 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
                 try{
                     // get data from edit text
                     p_id =  String.valueOf(Constant.PRODUCT_ID_INSERT_TEMP); // 0 temp data send
-                    p_name = AddProduct2.this.edt_p_name.getText().toString();
-                    p_barcode = AddProduct2.this.edt_p_barcode.getText().toString();
-                    p_price = AddProduct2.this.edt_p_price.getText().toString();
+                    p_name = AddProduct.this.edt_p_name.getText().toString();
+                    p_barcode = AddProduct.this.edt_p_barcode.getText().toString();
+                    p_price = AddProduct.this.edt_p_price.getText().toString();
                     try{
-                        p_qty = Integer.parseInt(AddProduct2.this.edt_p_qty.getText().toString());
+                        p_qty = Integer.parseInt(AddProduct.this.edt_p_qty.getText().toString());
                     }catch (Exception ex){
                         System.out.println(ex);
                         p_qty=0;
                     }
-                    p_type = AddProduct2.this.edt_p_type.getText().toString();
+                    p_type = AddProduct.this.edt_p_type.getText().toString();
                     p_imgName = Constant.IMG_NAME_TEMP; // temp data send
-                    p_cost = AddProduct2.this.edt_p_cost.getText().toString();
-                    p_detail = AddProduct2.this.edt_p_detail.getText().toString();
+                    p_cost = AddProduct.this.edt_p_cost.getText().toString();
+                    p_detail = AddProduct.this.edt_p_detail.getText().toString();
                     p_createAt = Constant.CREATE_AT_TEMP; // temp data send;
                     //  Bad Input -> return
                     if(p_name.isEmpty()|| p_barcode.isEmpty() || p_price.isEmpty() ||
@@ -169,7 +169,7 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
                     //
                     File imgProduct = imgManager.saveImgToInternalStorage(targetImg, Constant.IMG_NAME_TEMP);
 
-                    final ProgressDialog progress = ProgressDialog.show(AddProduct2.this.getActivity(), "Loading",
+                    final ProgressDialog progress = ProgressDialog.show(AddProduct.this.getActivity(), "Loading",
                             "Please wait ...", true);
 
                     WebService.sendAddProduct(new AsyncHttpResponseHandler() {
@@ -263,7 +263,7 @@ public class AddProduct2 extends Fragment implements UpdatePageFragment {
 //                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                String tag = Constant.TAG_FRAGMENT_SCAN_BARCODE;
                 Fragment scanBarcode = new ScanBarCode();
-                scanBarcode.setTargetFragment(AddProduct2.this, Constant.REQUEST_CODE_BARCODE);
+                scanBarcode.setTargetFragment(AddProduct.this, Constant.REQUEST_CODE_BARCODE);
 //                fragmentTransaction.addToBackStack(null);
 //                fragmentTransaction.replace(R.id.fragment_container_main, scanBarcode, tag);
 //                fragmentTransaction.commit();
