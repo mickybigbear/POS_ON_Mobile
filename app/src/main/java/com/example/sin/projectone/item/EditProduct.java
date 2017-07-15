@@ -35,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by nanth on 12/11/2016.
  */
 
-public class EditProduct2 extends Fragment {
+public class EditProduct extends Fragment {
 
     private Product products;
     private Product targetProduct;
@@ -94,7 +94,7 @@ public class EditProduct2 extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.remove(EditProduct2.this).commit();
+                fragmentTransaction.remove(EditProduct.this).commit();
                 fragmentManager.popBackStack();
             }
         };
@@ -108,25 +108,25 @@ public class EditProduct2 extends Fragment {
                 int p_qty;
                 try{
                     p_id = saveProduct.id;
-                    p_name = EditProduct2.this.edt_p_name.getText().toString();
-                    p_barcode = EditProduct2.this.edt_p_barcode.getText().toString();
-                    p_price = EditProduct2.this.edt_p_price.getText().toString();
-                    p_qty = Integer.parseInt(EditProduct2.this.edt_p_qty.getText().toString());
+                    p_name = EditProduct.this.edt_p_name.getText().toString();
+                    p_barcode = EditProduct.this.edt_p_barcode.getText().toString();
+                    p_price = EditProduct.this.edt_p_price.getText().toString();
+                    p_qty = Integer.parseInt(EditProduct.this.edt_p_qty.getText().toString());
                     p_type = saveProduct.type; // can't edit
                     p_imgName = saveProduct.imgName; //debug;
-                    p_cost = EditProduct2.this.edt_p_cost.getText().toString();
-                    p_detail = EditProduct2.this.edt_p_detail.getText().toString();
+                    p_cost = EditProduct.this.edt_p_cost.getText().toString();
+                    p_detail = EditProduct.this.edt_p_detail.getText().toString();
                     p_createAt = saveProduct.createAt; // debug
                     targetProduct = new Product(p_id, p_name, p_barcode, p_price, p_qty,
                             p_type, p_imgName, p_cost, p_detail, p_createAt);
                     if(Product.isEquals(targetProduct,saveProduct)){
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(EditProduct2.this).commit();
+                        fragmentTransaction.remove(EditProduct.this).commit();
                         fragmentManager.popBackStack();
                         return;
                     }
                     else{
-                        final ProgressDialog progress = ProgressDialog.show(EditProduct2.this.getActivity(), "Loading",
+                        final ProgressDialog progress = ProgressDialog.show(EditProduct.this.getActivity(), "Loading",
                                 "Please wait ...", true);
 
                         JSONObject JSProduct = targetProduct.toJSONObject();
@@ -137,11 +137,11 @@ public class EditProduct2 extends Fragment {
                                     try {//new StringEntity(data, "UTF-8");
                                         JSONObject jsonObject = new JSONObject(new String(responseBody));
                                         ProductDBHelper.getInstance(getActivity()).UpdateProduct(jsonObject); // update db
-                                        //((ViewProduct2)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_VIEW)).updatePage();
+                                        //((ViewProduct)fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_VIEW)).updatePage();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    ProductDBHelper.getInstance(getActivity()).UpdateProduct(EditProduct2.this.targetProduct);
+                                    ProductDBHelper.getInstance(getActivity()).UpdateProduct(EditProduct.this.targetProduct);
                                     progress.dismiss();
                                     final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
                                     Bundle b = new Bundle();
@@ -162,7 +162,7 @@ public class EditProduct2 extends Fragment {
                                         }
                                     }.start();
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.remove(EditProduct2.this).commit();
+                                    fragmentTransaction.remove(EditProduct.this).commit();
                                     fragmentManager.popBackStack();
                                 }
 
@@ -170,7 +170,7 @@ public class EditProduct2 extends Fragment {
                                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                     progress.dismiss();
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.remove(EditProduct2.this).commit();
+                                    fragmentTransaction.remove(EditProduct.this).commit();
                                     fragmentManager.popBackStack();
                                 }
                             },JSProduct);

@@ -40,8 +40,8 @@ public class ScanBarCode  extends Fragment implements ZXingScannerView.ResultHan
         Intent barCode = new Intent();
         barCode.putExtra(Constant.KEY_INTENT_BARCODE, result.toString());
         int a = fragmentManager.getBackStackEntryCount();
-        //AddProduct2 addProduct = (AddProduct2) fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_ADD);
-        AddProduct2 addProduct = (AddProduct2) getTargetFragment();
+        //AddProduct addProduct = (AddProduct) fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_ITEM_ADD);
+        AddProduct addProduct = (AddProduct) getTargetFragment();
         addProduct.onActivityResult(this.getTargetRequestCode(), Constant.RESULT_CODE_BARCODE, barCode);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(this).commit();

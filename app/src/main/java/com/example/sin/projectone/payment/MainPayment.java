@@ -29,8 +29,8 @@ import java.util.ArrayList;
 // * Use the {@link MainPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class MainPayment extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment2.OnFragmentInteractionListener,
-EndPayment2.OnFragmentInteractionListener{
+public class MainPayment extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment.OnFragmentInteractionListener,
+EndPayment.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -215,9 +215,9 @@ EndPayment2.OnFragmentInteractionListener{
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return ScanPayment2.newInstance("", "", (ScanPayment2.OnFragmentInteractionListener)parent);
+                return ScanPayment.newInstance("", "", (ScanPayment.OnFragmentInteractionListener)parent);
             } else {
-                return EndPayment2.newInstance("", "", basketProduct, (EndPayment2.OnFragmentInteractionListener)parent);
+                return EndPayment.newInstance("", "", basketProduct, (EndPayment.OnFragmentInteractionListener)parent);
             }
         }
 

@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
@@ -25,8 +26,8 @@ import com.example.sin.projectone.R;
  * Use the {@link MainItem#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainItem extends Fragment implements TabLayout.OnTabSelectedListener, ViewProduct2.OnFragmentInteractionListener
-, AddProduct2.OnFragmentInteractionListener{
+public class MainItem extends Fragment implements TabLayout.OnTabSelectedListener, ViewProduct.OnFragmentInteractionListener
+, AddProduct.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -39,6 +40,7 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton fab;
     private OnFragmentInteractionListener mListener;
 
     public MainItem() {
@@ -79,10 +81,19 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
         View view = inflater.inflate(R.layout.fragment_main_item, container, false);
         //Initializing the tablayout
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-
+        // get fab
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        AddProduct.newInstance("","",this);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainItem.this.mListener.onRepleceFragment(AddProduct.newInstance("","",MainItem.this));
+            }
+        });
+        fab.show();
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("View product"));
-        tabLayout.addTab(tabLayout.newTab().setText("Add product"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.items)));
+        tabLayout.addTab(tabLayout.newTab().setText("Catalogs"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.addOnTabSelectedListener(this);
 
@@ -126,6 +137,13 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     }
 
     @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        fab.setOnClickListener(null);
+        fab.hide();
+    }
+
+    @Override
     public void onTabSelected(TabLayout.Tab tab) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
@@ -164,7 +182,7 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRepleceFragment(Fragment fragment, Bundle bundle);
+        void onRepleceFragment(Fragment fragment);
 
     }
 
@@ -182,9 +200,10 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return  ViewProduct2.newInstance("","", (ViewProduct2.OnFragmentInteractionListener)parent);
+                return  ViewProduct.newInstance("","", (ViewProduct.OnFragmentInteractionListener)parent);
             } else {
-                return AddProduct2.newInstance("","",(AddProduct2.OnFragmentInteractionListener)parent);
+                //return AddProduct.newInstance("","",(AddProduct.OnFragmentInteractionListener)parent);
+                return  CatalogFragment.newInstance(1);
             }
         }
 

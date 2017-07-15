@@ -1,12 +1,10 @@
 package com.example.sin.projectone.item;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +25,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ViewProduct2.OnFragmentInteractionListener} interface
+ * {@link ViewProduct.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ViewProduct2#newInstance} factory method to
+ * Use the {@link ViewProduct#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewProduct2 extends Fragment implements UpdatePageFragment {
+public class ViewProduct extends Fragment implements UpdatePageFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,7 +49,7 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
     private ProductDetailDialog productDetailDialog;
     private Product targetProduct;
 
-    public ViewProduct2() {
+    public ViewProduct() {
         // Required empty public constructor
     }
 
@@ -61,11 +59,11 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewProduct2.
+     * @return A new instance of fragment ViewProduct.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewProduct2 newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
-        ViewProduct2 fragment = new ViewProduct2();
+    public static ViewProduct newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+        ViewProduct fragment = new ViewProduct();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -94,6 +92,7 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
         products = ProductDBHelper.getInstance(getActivity().getApplicationContext()).getAllProductFromDB();
         productAdapter = new ProductAdapter(ApplicationHelper.getAppContext(), products, R.layout.list_product_view);
         listProduct.setOnItemClickListener(onItemClickListener());
+        productAdapter.add(new Product("test", "123", "20", "100", 100, "A","1.img","80", "aaa", "10/10/2016"));
         listProduct.setAdapter(productAdapter);
         return view;
     }
@@ -116,21 +115,23 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Product product = productAdapter.getItem(position);
-                String a = product.imgName;
-                Bundle bundle = new Bundle();
-                String tag = Constant.TAG_FRAGMENT_DIALOG_PRODUCT_DETAIL;
-                bundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, product);
-                productDetailDialog = ProductDetailDialog.newInstance(bundle, onBackDialogPress(), onEditDialogPress());
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment prev = fragmentManager.findFragmentByTag(tag);
-                if(prev!=null){
-                    fragmentTransaction.remove(prev);
-                }
-                ViewProduct2.this.targetProduct = product;
-                productDetailDialog.show(fragmentManager,tag);
+//                Product product = productAdapter.getItem(position);
+//                Bundle bundle = new Bundle();
+               // String tag = Constant.TAG_FRAGMENT_DIALOG_PRODUCT_DETAIL;
+//                bundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, product);
+//                productDetailDialog = ProductDetailDialog.newInstance(bundle, onBackDialogPress(), onEditDialogPress());
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                Fragment prev = fragmentManager.findFragmentByTag(tag);
+//                if(prev!=null){
+//                    fragmentTransaction.remove(prev);
+//                }
+//                ViewProduct.this.targetProduct = product;
+//                productDetailDialog.show(fragmentManager,tag);
 
-
+                Bundle productBundle = new Bundle();
+                productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, productAdapter.getItem(position));
+                Fragment newFragment = new EditProduct();
+                mListener.onFragmentChange(newFragment, productBundle);
             }
         };
     }
@@ -150,11 +151,13 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
             public void onClick(View v) {
                 productDetailDialog.dismiss();
                 Bundle productBundle = new Bundle();
-                productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, ViewProduct2.this.targetProduct);
-                mListener.onFragmentChange(new EditProduct2(), productBundle);
+                productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, ViewProduct.this.targetProduct);
+                mListener.onFragmentChange(new EditProduct(), productBundle);
             }
         };
     }
+
+
 
 
 
@@ -186,5 +189,6 @@ public class ViewProduct2 extends Fragment implements UpdatePageFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentChange(Fragment fragment, Bundle bundle);
+
     }
 }
