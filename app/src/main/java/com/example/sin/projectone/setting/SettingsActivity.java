@@ -125,34 +125,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
-    public void bindOnClickToPreference(final String prefName,Context context){
-        Preference pref = findPreference(prefName);
-        pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
 
-                Toast.makeText(getApplicationContext(), "you clicl on"+prefName, Toast.LENGTH_SHORT).show();
-                try {
-                    this.wait(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-                return false;
-            }
-        });
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bindOnClickToPreference("kb_qrcode_help", this);
-        bindOnClickToPreference("ktb_qrcode_help", this);
-
         setTitle("Setting");
         setupActionBar();
-
-
     }
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -225,6 +203,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
             bindPreferenceSummaryToValue(findPreference("paypal_link"));
             bindPreferenceSummaryToValue(findPreference("paypal_link"));
+            bindOnClickToPreference("kb_qrcode_help", this.getActivity());
+            bindOnClickToPreference("ktb_qrcode_help", this.getActivity());
             Log.d("sync_frequency", "onCreate: "+ syncConnPref);
         }
 
@@ -236,6 +216,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 return true;
             }
             return super.onOptionsItemSelected(item);
+        }
+        public void bindOnClickToPreference(final String prefName, final Context context){
+            Preference pref = findPreference("kb_qrcode_help");
+            System.out.print(prefName);
+            System.out.println(findPreference(prefName));
+            Log.d("check Preferance", "bindOnClickToPreference: "+ pref.toString());
+            pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+                    Toast.makeText(context, "you clicl on"+prefName, Toast.LENGTH_SHORT).show();
+
+
+
+                    return false;
+                }
+            });
         }
     }
     /**
