@@ -161,12 +161,13 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     @Override
     public void onFragmentChange(Fragment newFragment, Bundle bundle) {
         //mListener.onRepleceFragment(newFragment, bundle);
-        String tag = Constant.TAG_FRAGMENT_CONTAINER;
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//        String tag = Constant.TAG_FRAGMENT_CONTAINER;
+//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         newFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragment_container_main, newFragment, tag);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+//        fragmentTransaction.replace(R.id.fragment_container_main, newFragment, tag);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+        mListener.onRepleceFragment(newFragment);
 
     }
 

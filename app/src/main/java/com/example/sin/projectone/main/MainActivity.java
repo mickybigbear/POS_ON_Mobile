@@ -7,17 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity
     private String userName= "";
     private Toolbar toolbar;
     private UserManager mManager;
+    private ActionMenuView amvMenu;
+    private MenuItem itemBack, itemTitle, itemSave;
+    private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +67,15 @@ public class MainActivity extends AppCompatActivity
         //setContentView(R.layout.content_main);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
+        // add back arrow to toolbar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        amvMenu = (ActionMenuView) toolbar.findViewById(R.id.toolbarItem);
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -75,10 +87,16 @@ public class MainActivity extends AppCompatActivity
 //        });
 //        fab.show();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.onBackPressed();
+            }
+        });
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -108,13 +126,12 @@ public class MainActivity extends AppCompatActivity
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container_main, firstFragment).commit();
-            toolbar.setTitle("Payment");
         }
+
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Fragment containerFragment = fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_CONTAINER);
         int childFragmentStack = 0;
         int fragmentStack = getFragmentManager().getBackStackEntryCount();
@@ -127,6 +144,9 @@ public class MainActivity extends AppCompatActivity
             containerFragment.getChildFragmentManager().popBackStack();
         } else if(fragmentStack>0){
             getFragmentManager().popBackStack();
+            if(fragmentStack==1){
+                showBackToolbar(false);
+            }
         }
         else if(doubleBackToExitPressedOnce){
             super.onBackPressed();
@@ -144,12 +164,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+//        // use amvMenu here
+//        getMenuInflater().inflate(R.menu.toolbar, amvMenu.getMenu());
+//        Menu menuToolbar = amvMenu.getMenu();
+//
+//        itemSave = menuToolbar.findItem(R.id.item_save);
+//
+//        itemSave.setVisible(false);
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -159,11 +195,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -311,7 +346,25 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+            showBackToolbar(true);
         }
+    }
+
+    private boolean showBackToolbar(boolean bool){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar==null)return false;
+        if(bool){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            toggle.setDrawerIndicatorEnabled(false);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }else{
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            toggle.setDrawerIndicatorEnabled(true);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+        return true;
     }
 
     private void clearBackStackFragment(){
