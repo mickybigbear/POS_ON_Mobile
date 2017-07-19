@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -42,16 +42,17 @@ import cz.msebera.android.httpclient.Header;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainItem.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, MainItem.OnFragmentInteractionListener,MainPayment.OnFragmentInteractionListener{
     private boolean doubleBackToExitPressedOnce = false;
     private FragmentManager fragmentManager;
     private String userName= "";
     private Toolbar toolbar;
     private UserManager mManager;
     private ActionMenuView amvMenu;
-    private MenuItem itemBack, itemTitle, itemSave;
+    private MenuItem itemAction1, itemAction2;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
+    private boolean flagFirstFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,22 +114,25 @@ public class MainActivity extends AppCompatActivity
             // then we don't need to do anything and should return or else
             // we could end up with overlapping fragments.
             if (savedInstanceState != null) {
+                flagFirstFragment = false;
                 return;
             }
+            flagFirstFragment = true;
+//            // Create a new Fragment to be placed in the activity layout
+//            MainPayment firstFragment = MainPayment.newInstance("", "", getMenuItem(0));
+//            // In case this activity was started with special instructions from an
+//            // Intent, pass the Intent's extras to the fragment as arguments
+//            firstFragment.setArguments(getIntent().getExtras());
+//
+//            // Add the fragment to the 'fragment_container' FrameLayout
+//            fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction()
+//                    .add(R.id.fragment_container_main, firstFragment).commit();
 
-            // Create a new Fragment to be placed in the activity layout
-            MainPayment firstFragment = new MainPayment();
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container_main, firstFragment).commit();
         }
-
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -169,15 +173,32 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.toolbar, menu);
 
-//        // use amvMenu here
+        // use amvMenu here
 //        getMenuInflater().inflate(R.menu.toolbar, amvMenu.getMenu());
 //        Menu menuToolbar = amvMenu.getMenu();
-//
-//        itemSave = menuToolbar.findItem(R.id.item_save);
-//
-//        itemSave.setVisible(false);
+
+        itemAction1 = menu.findItem(R.id.item_action1);
+        itemAction2 = menu.findItem(R.id.item_action2);
+        itemAction2.setActionView(R.layout.action_button_menu);
+        itemAction1.setActionView(R.layout.action_button_menu);
+
+        if(flagFirstFragment){
+            flagFirstFragment = false;
+            // Create a new Fragment to be placed in the activity layout
+            MainPayment firstFragment = MainPayment.newInstance("", "", getMenuItem(0));
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            firstFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragment_container_main, firstFragment).commit();
+        }
+
+
         return true;
     }
 
@@ -210,7 +231,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_payment) {
             toolbar.setTitle(getString(R.string.payment));
-            newFragment = new MainPayment();
+            newFragment = MainPayment.newInstance("", "", getMenuItem(0));
         } else if (id == R.id.nav_product) {
             newFragment = new MainItem();
             toolbar.setTitle(getString(R.string.items));
@@ -365,6 +386,17 @@ public class MainActivity extends AppCompatActivity
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
         return true;
+    }
+
+    public MenuItem getMenuItem(int id){
+        switch (id){
+            case 0 :
+                return itemAction1;
+            case 1:
+                return itemAction2;
+            default:
+                return null;
+        }
     }
 
     private void clearBackStackFragment(){

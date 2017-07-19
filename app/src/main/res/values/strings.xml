@@ -148,6 +148,9 @@
     <string name="contact_us">Contact us</string>
     <string name="title_activity_choose_bank_qrcode">Choose method</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="save">Save</string>
+    <string name="Checkout">Checkout</string>
+    <string name="add">Add</string>
 
     <!--<string name="app_name">Effective Navigation</string>-->
 

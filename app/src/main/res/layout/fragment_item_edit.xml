@@ -7,39 +7,28 @@
     android:weightSum="1">
 
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:maxHeight="300dp"
-                app:srcCompat="@drawable/ic_menu_gallery"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="20dp"
-                android:id="@+id/img_product" />
-        </RelativeLayout>
-    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5">
+        android:layout_weight="1">
 
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5">
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:srcCompat="@drawable/ic_menu_gallery"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:id="@+id/img_product" />
+
 
 
             <LinearLayout
@@ -202,36 +191,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:text="@string/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_cancel"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="50dp"
-                android:layout_marginBottom="30dp"/>
-
-            <Button
-                android:text="@string/btn_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btn_cancel"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/btn_submit"
-                android:layout_marginRight="50dp"
-                android:layout_marginBottom="30dp"/>
-        </RelativeLayout>
-    </LinearLayout>
 
 </LinearLayout>

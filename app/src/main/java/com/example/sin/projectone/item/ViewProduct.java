@@ -1,5 +1,6 @@
 package com.example.sin.projectone.item;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import com.example.sin.projectone.ProductAdapter;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.ProductDetailDialog;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -115,23 +117,14 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Product product = productAdapter.getItem(position);
-//                Bundle bundle = new Bundle();
-               // String tag = Constant.TAG_FRAGMENT_DIALOG_PRODUCT_DETAIL;
-//                bundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, product);
-//                productDetailDialog = ProductDetailDialog.newInstance(bundle, onBackDialogPress(), onEditDialogPress());
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                Fragment prev = fragmentManager.findFragmentByTag(tag);
-//                if(prev!=null){
-//                    fragmentTransaction.remove(prev);
-//                }
-//                ViewProduct.this.targetProduct = product;
-//                productDetailDialog.show(fragmentManager,tag);
+                Activity activity = ViewProduct.this.getActivity();
+                MainActivity mainActivity ;
+                if(activity instanceof MainActivity){
+                    mainActivity = (MainActivity)activity;
+                    Fragment newFragment = EditProduct.newInstance(mainActivity.getMenuItem(0),productAdapter.getItem(position));
+                    mListener.onFragmentChange(newFragment);
+                }
 
-                Bundle productBundle = new Bundle();
-                productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, productAdapter.getItem(position));
-                Fragment newFragment = new EditProduct();
-                mListener.onFragmentChange(newFragment, productBundle);
             }
         };
     }
@@ -152,7 +145,7 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
                 productDetailDialog.dismiss();
                 Bundle productBundle = new Bundle();
                 productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, ViewProduct.this.targetProduct);
-                mListener.onFragmentChange(new EditProduct(), productBundle);
+                mListener.onFragmentChange(new EditProduct());
             }
         };
     }
@@ -188,7 +181,7 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentChange(Fragment fragment, Bundle bundle);
+        void onFragmentChange(Fragment fragment);
 
     }
 }

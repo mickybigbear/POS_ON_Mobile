@@ -1,5 +1,6 @@
 package com.example.sin.projectone.payment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,13 +11,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.item.AddProduct;
 
 import java.util.ArrayList;
 
@@ -43,10 +47,11 @@ EndPayment.OnFragmentInteractionListener{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    private MenuItem addToCart;
     public ArrayList<Product> basketProduct = new ArrayList<Product>();
 
 
-    //private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
     public MainPayment() {
         // Required empty public constructor
@@ -61,12 +66,13 @@ EndPayment.OnFragmentInteractionListener{
      * @return A new instance of fragment MainPayment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainPayment newInstance(String param1, String param2) {
+    public static MainPayment newInstance(String param1, String param2, MenuItem addToCart) {
         MainPayment fragment = new MainPayment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        fragment.addToCart = addToCart;
         return fragment;
     }
 
@@ -102,6 +108,24 @@ EndPayment.OnFragmentInteractionListener{
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
+        if(addToCart!=null){
+            //addToCart.setEnabled(false);
+            addToCart.setVisible(true);
+            TextView textView  = (TextView) addToCart.getActionView();
+            textView.setText(getString(R.string.Checkout));
+            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_add_shop_cart, 0, 0, 0);
+            textView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if(MainPayment.this.basketProduct.size()>0){
+                        MainPayment.this.mListener.onRepleceFragment(EndPayment.newInstance("", "",
+                                MainPayment.this.basketProduct, MainPayment.this));
+                    }
+                }
+            });
+
+        }
+
 
         return view;
 
@@ -119,18 +143,36 @@ EndPayment.OnFragmentInteractionListener{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+        if (activity instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+
+
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        mListener = null;
+        if(addToCart!=null){
+            addToCart.setVisible(false);
+            addToCart.getActionView().setOnClickListener(null);
+        }
     }
 
     @Override
@@ -171,6 +213,9 @@ EndPayment.OnFragmentInteractionListener{
         } else{
             Toast.makeText(getActivity().getApplicationContext(), "Not found product barcode: "+barcode, Toast.LENGTH_SHORT).show();
         }
+//        if(basketProduct.size()>0){
+//            addToCart.setEnabled(true);
+//        }else {addToCart.setEnabled(false);}
         mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
@@ -187,20 +232,20 @@ EndPayment.OnFragmentInteractionListener{
     }
 
 
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onRepleceFragment(Fragment fragment);
+    }
 
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private Fragment parent;

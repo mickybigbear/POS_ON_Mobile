@@ -12,9 +12,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.9">
-
-
+        android:layout_weight="1">
 
         <LinearLayout
             android:orientation="vertical"
@@ -22,21 +20,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5">
 
-            <RelativeLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="1">
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:maxHeight="300dp"
+                app:srcCompat="@drawable/ic_menu_gallery" />
 
-                <ImageView
-                    android:id="@+id/img_product"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp"
-                    android:maxHeight="300dp"
-                    app:srcCompat="@drawable/ic_menu_gallery" />
-            </RelativeLayout>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -199,25 +191,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:text="@string/btn_add"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_add"
-                android:layout_margin="30dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true" />
-        </RelativeLayout>
-    </LinearLayout>
 
 </LinearLayout>

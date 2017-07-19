@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,11 +42,24 @@ public class EditProduct extends Fragment {
     private Product targetProduct;
     private Product saveProduct;
     private FragmentManager fragmentManager;
-    private Button btn_back, btn_submit;
     private TextView text_product_type;
     private ImageView img_product;
     private EditText edt_p_name, edt_p_barcode, edt_p_qty, edt_p_price, edt_p_cost, edt_p_detail;
     private MessageAlertDialog alertDialog;
+    private MenuItem editActionView;
+
+    public EditProduct(){
+
+    }
+
+    public static EditProduct newInstance(MenuItem editActionView, Product product) {
+        EditProduct newFragment = new EditProduct();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, product);
+        newFragment.setArguments(bundle);
+        newFragment.editActionView = editActionView;
+        return newFragment;
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_edit, container, false);
@@ -56,9 +70,6 @@ public class EditProduct extends Fragment {
             saveProduct = (Product) products.clone();
         }
         img_product = (ImageView) view.findViewById(R.id.img_product);
-
-        btn_back = (Button) view.findViewById(R.id.btn_cancel);
-        btn_submit = (Button) view.findViewById(R.id.btn_submit);
 
         edt_p_name = (EditText) view.findViewById(R.id.edt_text_product_name);
         edt_p_barcode = (EditText) view.findViewById(R.id.edt_text_product_barcode);
@@ -81,11 +92,14 @@ public class EditProduct extends Fragment {
             img_product.setImageBitmap(img);
         }
 
-        btn_submit = (Button) view.findViewById(R.id.btn_submit);
-        btn_back = (Button) view.findViewById(R.id.btn_cancel);
-        btn_submit.setOnClickListener(onSubmitClick());
-        btn_back.setOnClickListener(onBackClick());
 
+        if(editActionView!=null){
+            TextView saveText = (TextView)editActionView.getActionView();
+            saveText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_check, 0, 0, 0);
+            saveText.setText(getString(R.string.save));
+            saveText.setOnClickListener(onSubmitClick());
+            editActionView.setVisible(true);
+        }
         return view;
     }
 
@@ -186,6 +200,15 @@ public class EditProduct extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        if(editActionView!=null){
+            editActionView.getActionView().setOnClickListener(null);
+            editActionView.setVisible(false);
+        }
     }
 
 

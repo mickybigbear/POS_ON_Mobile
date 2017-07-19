@@ -49,7 +49,9 @@ public class ImgManager {
         catch (FileNotFoundException e)
         {
             e.printStackTrace();
-            return null;
+            Bitmap brokenImg = BitmapFactory.decodeResource(ApplicationHelper.getAppContext().getResources(),
+                    R.drawable.ic_action_broken_img);
+            return brokenImg;
         }
     }
 

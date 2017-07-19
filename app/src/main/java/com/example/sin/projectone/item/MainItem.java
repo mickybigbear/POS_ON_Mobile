@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.main.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,17 +84,20 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         // get fab
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        AddProduct.newInstance("","",this);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainItem.this.mListener.onRepleceFragment(AddProduct.newInstance("","",MainItem.this));
+                Activity activity = MainItem.this.getActivity();
+                if(activity instanceof MainActivity){
+                    MainItem.this.mListener.onRepleceFragment(AddProduct.newInstance("","",MainItem.this,
+                            ((MainActivity) activity).getMenuItem(0)));
+                }
             }
         });
         fab.show();
         //Adding the tabs using addTab() method
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.items)));
-        tabLayout.addTab(tabLayout.newTab().setText("Catalogs"));
+        //tabLayout.addTab(tabLayout.newTab().setText("Catalogs"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.addOnTabSelectedListener(this);
 
@@ -159,16 +163,8 @@ public class MainItem extends Fragment implements TabLayout.OnTabSelectedListene
     }
 
     @Override
-    public void onFragmentChange(Fragment newFragment, Bundle bundle) {
-        //mListener.onRepleceFragment(newFragment, bundle);
-//        String tag = Constant.TAG_FRAGMENT_CONTAINER;
-//        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        newFragment.setArguments(bundle);
-//        fragmentTransaction.replace(R.id.fragment_container_main, newFragment, tag);
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
+    public void onFragmentChange(Fragment newFragment) {
         mListener.onRepleceFragment(newFragment);
-
     }
 
     /**

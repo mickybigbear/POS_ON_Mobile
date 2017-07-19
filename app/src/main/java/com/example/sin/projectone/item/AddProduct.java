@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.ImgManager;
@@ -60,10 +62,10 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
     private ImageView imgProduct;
     private FragmentManager fragmentManager;
     private EditText edt_p_name, edt_p_barcode, edt_p_qty, edt_p_price, edt_p_type, edt_p_cost, edt_p_detail;
-    private Button  btn_add;
     private ImgManager imgManager;
     private ImageButton btn_scan;
     private String lastBarcodeResult="";
+    private MenuItem addButton;
 
     public AddProduct() {
         // Required empty public constructor
@@ -78,12 +80,13 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
      * @return A new instance of fragment AddProduct.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddProduct newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+    public static AddProduct newInstance(String param1, String param2, OnFragmentInteractionListener mListener, MenuItem addButton) {
         AddProduct fragment = new AddProduct();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        fragment.addButton = addButton;
         fragment.mListener = mListener;
         return fragment;
     }
@@ -104,7 +107,6 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
         View view = inflater.inflate(R.layout.fragment_item_add2, container, false);
         fragmentManager = getFragmentManager();
         imgManager = ImgManager.getInstance();
-        btn_add = (Button) view.findViewById(R.id.btn_add);
 
         edt_p_name = (EditText) view.findViewById(R.id.edt_text_product_name);
         edt_p_barcode = (EditText) view.findViewById(R.id.edt_text_product_barcode);
@@ -119,10 +121,17 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
         }
         btn_scan = (ImageButton) view.findViewById(R.id.btn_scan);
 
-        btn_add.setOnClickListener(onAddClick());
         //btn_back.setOnClickListener(onBackClick());
         btn_scan.setOnClickListener(onBtnScanClick());
         imgProduct.setOnClickListener(onImgClick());
+
+        if(addButton!=null){
+            TextView addText = (TextView) addButton.getActionView();
+            addText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_action_add, 0, 0, 0);
+            addText.setText(getString(R.string.add));
+            addText.setOnClickListener(onAddClick());
+            addButton.setVisible(true);
+        }
         return view;
     }
 
@@ -256,6 +265,15 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
         }
     }
 
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        if(addButton!=null){
+            addButton.getActionView().setOnClickListener(null);
+            addButton.setVisible(false);
+        }
+    }
+
     private ImageButton.OnClickListener onBtnScanClick(){
         return new View.OnClickListener() {
             @Override
@@ -267,7 +285,7 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
 //                fragmentTransaction.addToBackStack(null);
 //                fragmentTransaction.replace(R.id.fragment_container_main, scanBarcode, tag);
 //                fragmentTransaction.commit();
-                mListener.onFragmentChange(scanBarcode,null);
+                mListener.onFragmentChange(scanBarcode);
             }
         };
     }
@@ -318,7 +336,7 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentChange(Fragment fragment, Bundle bundle);
+        void onFragmentChange(Fragment fragment);
     }
 
     @Override
