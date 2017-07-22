@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="20dp"
                 android:maxHeight="300dp"
-                app:srcCompat="@drawable/ic_menu_gallery" />
+                app:srcCompat="@drawable/ic_action_add_photo" />
 
             <LinearLayout
                 android:orientation="horizontal"

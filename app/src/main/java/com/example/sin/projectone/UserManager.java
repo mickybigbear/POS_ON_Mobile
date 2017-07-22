@@ -104,4 +104,21 @@ public class UserManager extends AppCompatActivity {
         return mPrefs.getString(KEY, "");
     }
 
+    public String getShopId(){
+        // ชั่วคราว
+        String shopId = mPrefs.getString(KEY_SHOP_ID,"");
+        if(!shopId.equals("")){
+            return shopId;
+        }
+        return String.valueOf(Constant.SHOP_ID);
+    }
+    public String getUserId(){
+        // ชั่วคราว
+        String userId = mPrefs.getString(KEY_USER_ID,"");
+        if(!userId.equals("")){
+            return userId;
+        }
+        return String.valueOf(Constant.USER_ID);
+    }
+
 }

@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sin.projectone.MessageAlertDialog;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.item.AddProduct;
+import com.example.sin.projectone.main.MainActivity;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 // * create an instance of this fragment.
 // */
 public class MainPayment extends Fragment implements TabLayout.OnTabSelectedListener, ScanPayment.OnFragmentInteractionListener,
-EndPayment.OnFragmentInteractionListener{
+EndPayment.OnFragmentInteractionListener, ItemFragment.OnFragmentInteractionListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -120,6 +122,8 @@ EndPayment.OnFragmentInteractionListener{
                     if(MainPayment.this.basketProduct.size()>0){
                         MainPayment.this.mListener.onRepleceFragment(EndPayment.newInstance("", "",
                                 MainPayment.this.basketProduct, MainPayment.this));
+                    }else {
+                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.no_items_added_), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -162,17 +166,20 @@ EndPayment.OnFragmentInteractionListener{
         }
     }
 
-
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        if(addToCart!=null){
+            addToCart.setVisible(false);
+            addToCart.getActionView().setOnClickListener(null);
+        }
+    }
 
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        if(addToCart!=null){
-            addToCart.setVisible(false);
-            addToCart.getActionView().setOnClickListener(null);
-        }
     }
 
     @Override
@@ -194,22 +201,23 @@ EndPayment.OnFragmentInteractionListener{
     public void onScanResult(String barcode) {
         Product newProduct = ProductDBHelper.getInstance(getActivity().getApplicationContext()).searchProductByBarCode(barcode);
         if(newProduct!=null){
-            if(newProduct.qty<=0){
-                return;
-            }
-            newProduct.qty=1;
-            boolean found = false;
-            for(int i = 0; i< basketProduct.size(); i++){
-                Product checkP = basketProduct.get(i);
-                if(newProduct.id.equals(checkP.id)){
-                    checkP.qty +=1;
-                    found = true;
-                    break;
-                }
-            } if(!found){
-                basketProduct.add(newProduct);
-            }
-            Toast.makeText(getActivity().getApplicationContext(), "finish add item", Toast.LENGTH_SHORT).show();
+            addProductToBasket(newProduct);
+//            if(newProduct.qty<=0){
+//                return;
+//            }
+//            newProduct.qty=1;
+//            boolean found = false;
+//            for(int i = 0; i< basketProduct.size(); i++){
+//                Product checkP = basketProduct.get(i);
+//                if(newProduct.id.equals(checkP.id)){
+//                    checkP.qty +=1;
+//                    found = true;
+//                    break;
+//                }
+//            } if(!found){
+//                basketProduct.add(newProduct);
+//            }
+//            Toast.makeText(getActivity().getApplicationContext(), "finish add item", Toast.LENGTH_SHORT).show();
         } else{
             Toast.makeText(getActivity().getApplicationContext(), "Not found product barcode: "+barcode, Toast.LENGTH_SHORT).show();
         }
@@ -224,13 +232,59 @@ EndPayment.OnFragmentInteractionListener{
         basketProduct.clear();
         mViewPager.setCurrentItem(0);
         mSectionsPagerAdapter.notifyDataSetChanged();
+        ((MainActivity)getActivity()).showBackToolbar(false); //temp
+        getFragmentManager().popBackStack();
     }
 
     @Override
     public void onFailurePayment() {
+        basketProduct.clear();
+        mViewPager.setCurrentItem(0);
+        mSectionsPagerAdapter.notifyDataSetChanged();
+        ((MainActivity)getActivity()).showBackToolbar(false); // temp
+        getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onCancelPayment() {
+        basketProduct.clear();
+        mViewPager.setCurrentItem(0);
+        mSectionsPagerAdapter.notifyDataSetChanged();
+        getFragmentManager().popBackStack();
 
     }
 
+    @Override
+    public void onItemSelected(Product product) {
+        addProductToBasket(product);
+    }
+
+    private boolean addProductToBasket(Product product){
+        if(product.qty<=0){
+            return false;
+        }
+        Product target = (Product) product.clone();
+        Boolean found = false;
+        Product checkInBasket = null;
+        for(int i=0;i<basketProduct.size();i++){
+            checkInBasket = basketProduct.get(i);
+            if(checkInBasket.id.equals(target.id)){
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            target.qty=1;
+            basketProduct.add(target);
+        }else if(found && (checkInBasket.qty+1)<=product.qty){
+            checkInBasket.qty+=1;
+        }else {
+            Toast.makeText(getActivity().getApplicationContext(), "Can not add this item", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        Toast.makeText(getActivity().getApplicationContext(), "finish add item", Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -262,7 +316,8 @@ EndPayment.OnFragmentInteractionListener{
             if (position == 0) {
                 return ScanPayment.newInstance("", "", (ScanPayment.OnFragmentInteractionListener)parent);
             } else {
-                return EndPayment.newInstance("", "", basketProduct, (EndPayment.OnFragmentInteractionListener)parent);
+                //return EndPayment.newInstance("", "", basketProduct, (EndPayment.OnFragmentInteractionListener)parent);
+                return  ItemFragment.newInstance("", "", (ItemFragment.OnFragmentInteractionListener)parent);
             }
         }
 

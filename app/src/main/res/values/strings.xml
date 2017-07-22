@@ -152,6 +152,10 @@
     <string name="Checkout">Checkout</string>
     <string name="add">Add</string>
 
+    <!-- TODO: Toast Message -->
+    <string name="no_items_added_">No items added</string>
+    <string name="message_cancel_tansaction">Do you want to cancel this transaction?</string>
+
     <!--<string name="app_name">Effective Navigation</string>-->
 
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>

@@ -24,6 +24,7 @@ import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.WebService;
+import com.example.sin.projectone.main.MainActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -178,6 +179,7 @@ public class EditProduct extends Fragment {
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                     fragmentTransaction.remove(EditProduct.this).commit();
                                     fragmentManager.popBackStack();
+                                    ((MainActivity)getActivity()).showBackToolbar(false); // temp
                                 }
 
                                 @Override
@@ -186,6 +188,7 @@ public class EditProduct extends Fragment {
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                     fragmentTransaction.remove(EditProduct.this).commit();
                                     fragmentManager.popBackStack();
+                                    ((MainActivity)getActivity()).showBackToolbar(false); // temp
                                 }
                             },JSProduct);
                         }

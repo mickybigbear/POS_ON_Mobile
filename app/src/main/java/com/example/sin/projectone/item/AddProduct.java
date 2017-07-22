@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
@@ -19,12 +20,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sin.projectone.ApplicationHelper;
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.MessageAlertDialog;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.UserManager;
 import com.example.sin.projectone.WebService;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -139,6 +142,7 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserManager userManager = new UserManager(ApplicationHelper.getAppContext());
                 String p_id, p_name, p_barcode, p_price, p_type, p_imgName, p_cost, p_detail, p_createAt;
                 int p_qty;
                 JSONObject JsonProduct;
@@ -174,7 +178,8 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
                             p_type, p_imgName, p_cost, p_detail, p_createAt);
                     // make Json Product add send
                     JsonProduct = targetProduct.toJSONObject();
-                    JsonProduct.put(Constant.KEY_JSON_SHOPID, Constant.SHOP_ID); // add shop id
+                    JsonProduct.put(Constant.KEY_JSON_SHOPID, userManager.getShopId()); // add shop id
+                    //JsonProduct.put(Constant.KEY_JSON_SHOPID, Constant.SHOP_ID); // add shop id
                     //
                     File imgProduct = imgManager.saveImgToInternalStorage(targetImg, Constant.IMG_NAME_TEMP);
 
@@ -312,6 +317,8 @@ public class AddProduct extends Fragment implements UpdatePageFragment {
     }
 
     private void reset(){
+        imgProduct.setImageBitmap(BitmapFactory.decodeResource(ApplicationHelper.getAppContext().getResources(),
+                R.drawable.ic_action_broken_img));
         targetProduct = null;
         targetImg = null;
         edt_p_name.setText("");

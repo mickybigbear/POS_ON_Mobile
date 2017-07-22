@@ -19,6 +19,7 @@ import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.UserManager;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
@@ -94,8 +95,9 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
 
     private boolean loadTransaction(){
         // debug
+        UserManager userManager = new UserManager(getActivity().getApplicationContext());
         HttpUtilsAsync.setTimeout(2);
-        HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION+ Constant.SHOP_ID, null, new JsonHttpResponseHandler() {
+        HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION + userManager.getShopId() /*Constant.SHOP_ID*/, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -124,6 +126,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
                                     Cursor todoCursor = ProductDBHelper.getInstance(list_fragment.this.getActivity()).getTransaction();
                                     TransListCursor todoAdapter = new TransListCursor(list_fragment.this.getActivity(), todoCursor);
                                     setListAdapter(todoAdapter);
+                                    int a = todoAdapter.getCount();
                                     getListView().setOnItemClickListener(list_fragment.this);
                                 }
                             });

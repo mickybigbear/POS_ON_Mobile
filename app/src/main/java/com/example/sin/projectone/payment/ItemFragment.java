@@ -1,11 +1,8 @@
-package com.example.sin.projectone.item;
+package com.example.sin.projectone.payment;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,25 +11,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.sin.projectone.ApplicationHelper;
-import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductAdapter;
 import com.example.sin.projectone.ProductDBHelper;
-import com.example.sin.projectone.ProductDetailDialog;
 import com.example.sin.projectone.R;
-import com.example.sin.projectone.main.MainActivity;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ViewProduct.OnFragmentInteractionListener} interface
+ * {@link ItemFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ViewProduct#newInstance} factory method to
+ * Use the {@link ItemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewProduct extends Fragment implements UpdatePageFragment {
+public class ItemFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,15 +37,11 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    private FragmentManager fragmentManager;
     private ProductAdapter productAdapter;
     private ArrayList<Product> products = new ArrayList<Product>();
-    private ListView listProduct;
-    private ProductDetailDialog productDetailDialog;
-    private Product targetProduct;
+    private ListView listItem;
 
-    public ViewProduct() {
+    public ItemFragment() {
         // Required empty public constructor
     }
 
@@ -61,11 +51,11 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ViewProduct.
+     * @return A new instance of fragment ItemFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewProduct newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
-        ViewProduct fragment = new ViewProduct();
+    public static ItemFragment newInstance(String param1, String param2, OnFragmentInteractionListener mListener) {
+        ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -86,24 +76,21 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_item_view2, container, false);;
-        fragmentManager = getFragmentManager();
-        //set View
-        listProduct = (ListView) view.findViewById(R.id.list_view_item);
+        View view = inflater.inflate(R.layout.fragment_item, container, false);
+
+        listItem = (ListView) view.findViewById(R.id.list_item_view);
         products = ProductDBHelper.getInstance(getActivity().getApplicationContext()).getAllProductFromDB();
         productAdapter = new ProductAdapter(ApplicationHelper.getAppContext(), products, R.layout.list_product_view);
-        listProduct.setOnItemClickListener(onItemClickListener());
-        //productAdapter.add(new Product("test", "123", "20", "100", 100, "A","1.img","80", "aaa", "10/10/2016"));
-        listProduct.setAdapter(productAdapter);
+        listItem.setOnItemClickListener(onItemClickListener());
+        listItem.setAdapter(productAdapter);
         return view;
     }
+
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//
     }
 
 
@@ -117,57 +104,11 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
         return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Activity activity = ViewProduct.this.getActivity();
-                MainActivity mainActivity ;
-                if(activity instanceof MainActivity){
-                    mainActivity = (MainActivity)activity;
-                    Fragment newFragment = EditProduct.newInstance(mainActivity.getMenuItem(0),productAdapter.getItem(position));
-                    mListener.onFragmentChange(newFragment);
-                }
-
+                ItemFragment.this.mListener.onItemSelected(ItemFragment.this.productAdapter.getItem(position));
             }
         };
     }
 
-    private View.OnClickListener onBackDialogPress(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                productDetailDialog.dismiss();
-            }
-        };
-    }
-
-    private View.OnClickListener onEditDialogPress(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                productDetailDialog.dismiss();
-                Bundle productBundle = new Bundle();
-                productBundle.putParcelable(Constant.KEY_BUNDLE_PRODUCT, ViewProduct.this.targetProduct);
-                mListener.onFragmentChange(new EditProduct());
-            }
-        };
-    }
-
-
-
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG &&
-                resultCode==Constant.RESULT_CODE_PRODUCT_PAYMENT_DIALOG_SUBMIT){
-            updatePage();
-        }
-    }
-
-    @Override
-    public void updatePage() {
-        this.products = ProductDBHelper.getInstance(getActivity().getApplicationContext()).getAllProductFromDB();
-        productAdapter = new ProductAdapter(getActivity(), products, R.layout.list_product_view);
-        listProduct.setAdapter(productAdapter);
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -181,7 +122,6 @@ public class ViewProduct extends Fragment implements UpdatePageFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentChange(Fragment fragment);
-
+        void onItemSelected(Product product);
     }
 }

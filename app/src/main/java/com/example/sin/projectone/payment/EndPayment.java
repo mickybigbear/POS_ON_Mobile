@@ -1,10 +1,12 @@
 package com.example.sin.projectone.payment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.example.sin.projectone.ApplicationHelper;
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.MessageAlertDialog;
+import com.example.sin.projectone.OnBackPressedInterface;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductAdapter;
 import com.example.sin.projectone.ProductDBHelper;
@@ -44,7 +47,7 @@ import cz.msebera.android.httpclient.Header;
 // * Use the {@link EndPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class EndPayment extends Fragment implements UpdatePageFragment{
+public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPressedInterface{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -120,7 +123,9 @@ public class EndPayment extends Fragment implements UpdatePageFragment{
         _productList.setOnItemClickListener(onItemClickListener());
 
         btn_send = (Button) view.findViewById(R.id.btn_send);
-        btn_send.setEnabled(false);
+        if(adapter.getCount()<=0){
+            btn_send.setEnabled(false);
+        }
         text_total =(TextView) view.findViewById(R.id.text_total);
         edt_discount = (EditText) view.findViewById(R.id.edit_text_discount);
         text_total.setText(String.valueOf(getTotal()));
@@ -231,6 +236,8 @@ public class EndPayment extends Fragment implements UpdatePageFragment{
         mListener = null;
     }
 
+
+
     @Override
     public void updatePage(){
         removeProductEmpty();
@@ -250,6 +257,30 @@ public class EndPayment extends Fragment implements UpdatePageFragment{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        mListener.onCancelPayment();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        // do nothing
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.message_cancel_tansaction)).setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -264,6 +295,7 @@ public class EndPayment extends Fragment implements UpdatePageFragment{
         // TODO: Update argument type and name
         void onSuccessPayment();
         void onFailurePayment();
+        void onCancelPayment();
     }
     private float getTotal(){
         float total = 0;

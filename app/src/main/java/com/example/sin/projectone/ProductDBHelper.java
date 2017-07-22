@@ -375,13 +375,16 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     }
 
     public JSONObject getJSONTransaction(ArrayList<Product> products, String detail, float discount, float total){
+        UserManager userManager = new UserManager(ApplicationHelper.getAppContext());
         JSONObject transation = new JSONObject();
         JSONObject obj;
         JSONArray productList = new JSONArray();
         if(!products.isEmpty()&& products.size()>0){
             try {
-                transation.put(Constant.KEY_JSON_USERID,Constant.USER_ID);
-                transation.put(Constant.KEY_JSON_SHOPID,Constant.SHOP_ID);
+                //transation.put(Constant.KEY_JSON_USERID,Constant.USER_ID);
+                //transation.put(Constant.KEY_JSON_SHOPID,Constant.SHOP_ID);
+                transation.put(Constant.KEY_JSON_USERID,userManager.getUserId());
+                transation.put(Constant.KEY_JSON_SHOPID,userManager.getShopId());
                 transation.put(Constant.KEY_JSON_DETAIL_DISCOUNT, detail);
                 transation.put(Constant.KEY_JSON_DISCOUNT, discount);
                 transation.put(Constant.KEY_JSON_TOTAL, total);

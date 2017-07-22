@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
+import com.example.sin.projectone.OnBackPressedInterface;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.SignInActivity;
@@ -139,6 +139,13 @@ public class MainActivity extends AppCompatActivity
         Fragment containerFragment = fragmentManager.findFragmentByTag(Constant.TAG_FRAGMENT_CONTAINER);
         int childFragmentStack = 0;
         int fragmentStack = getFragmentManager().getBackStackEntryCount();
+        if(containerFragment instanceof OnBackPressedInterface){
+            ((OnBackPressedInterface) containerFragment).onBackPressed();
+            if(fragmentStack==1){
+                showBackToolbar(false);
+            }
+            return;
+        }
         if(containerFragment!=null){
             childFragmentStack = containerFragment.getChildFragmentManager().getBackStackEntryCount();
         }
@@ -196,6 +203,7 @@ public class MainActivity extends AppCompatActivity
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container_main, firstFragment).commit();
+            toolbar.setTitle(getString(R.string.payment));
         }
 
 
@@ -292,7 +300,8 @@ public class MainActivity extends AppCompatActivity
 
     private boolean loadTransaction(){
         // debug
-        HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION+Constant.SHOP_ID, null, new JsonHttpResponseHandler() {
+        UserManager userManager = new UserManager(getApplicationContext());
+        HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION + userManager.getShopId() /*Constant.SHOP_ID*/, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -371,7 +380,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private boolean showBackToolbar(boolean bool){
+    public boolean showBackToolbar(boolean bool){
         ActionBar actionBar = getSupportActionBar();
         if(actionBar==null)return false;
         if(bool){
