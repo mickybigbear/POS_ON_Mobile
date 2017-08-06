@@ -96,7 +96,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
     private boolean loadTransaction(){
         // debug
         UserManager userManager = new UserManager(getActivity().getApplicationContext());
-        HttpUtilsAsync.setTimeout(2);
+        HttpUtilsAsync.setTimeout(5000);
         HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION + userManager.getShopId() /*Constant.SHOP_ID*/, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -126,7 +126,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
                                     Cursor todoCursor = ProductDBHelper.getInstance(list_fragment.this.getActivity()).getTransaction();
                                     TransListCursor todoAdapter = new TransListCursor(list_fragment.this.getActivity(), todoCursor);
                                     setListAdapter(todoAdapter);
-                                    int a = todoAdapter.getCount();
+//                                    int a = todoAdapter.getCount();
                                     getListView().setOnItemClickListener(list_fragment.this);
                                 }
                             });
