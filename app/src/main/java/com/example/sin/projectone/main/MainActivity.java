@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -253,7 +254,7 @@ public class MainActivity extends AppCompatActivity
             newFragment = new com.example.sin.projectone.help.Main();
             toolbar.setTitle(getString(R.string.contact_us));
         } else if (id == R.id.nav_logout){
-            openActivity(SignInActivity.class);
+                openActivity(SignInActivity.class);
         } else if (id == R.id.nav_setting){
             intent.setClass(this, SettingsActivity.class);
             startActivity(intent);
@@ -351,6 +352,11 @@ public class MainActivity extends AppCompatActivity
                         Intent mainIntent = new Intent(getApplicationContext(), className);
                         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         mManager.clearSession();
+                        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("com.example.sin.projectone_preferences", getApplicationContext().MODE_PRIVATE);
+                        SharedPreferences.Editor mEditor = mPrefs.edit();
+                        Toast toast = Toast.makeText(getApplicationContext(), "logout successful", Toast.LENGTH_SHORT);
+                        toast.show();
+                        mEditor.clear().commit();
                         startActivity(mainIntent);
                         finish();
                         break;

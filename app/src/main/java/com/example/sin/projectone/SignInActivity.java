@@ -111,7 +111,8 @@ public class SignInActivity extends AppCompatActivity {
         params.put("user",user);
         params.put("pass",pass);
 
-        HttpUtilsAsync.setTimeout(2);
+        HttpUtilsAsync.setTimeout(10000);
+        Log.d("timeout", "registerProcess: "+HttpUtilsAsync.getTimeout());
         HttpUtilsAsync.post(Constant.URL_SERVER+"/api/user/", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -120,14 +121,14 @@ public class SignInActivity extends AppCompatActivity {
 
                     Context context = getApplicationContext();
                     if(res.equals("Welcome new user !")){
-                        navigateToActivity(RegisterStoreActivity.class);
+                        navigateToActivity(RegisterStoreActivity.class, user);
                         CharSequence text = res;
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
                     }
                     else if(res.equals("Welcome Back !")){
                         if(response.get("shopName").equals("null")){
-                            navigateToActivity(RegisterStoreActivity.class);
+                            navigateToActivity(RegisterStoreActivity.class, user);
                             CharSequence text = "Please create your shop or join in !";
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
@@ -206,6 +207,13 @@ public class SignInActivity extends AppCompatActivity {
     private void navigateToActivity(Class className){
         //Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
         Intent mainIntent = new Intent(getApplicationContext(),className);
+        startActivity(mainIntent);
+        finish();
+    }
+    private void navigateToActivity(Class className, String username){
+        //Intent mainIntent = new Intent(getApplicationContext(),MainNav.class);
+        Intent mainIntent = new Intent(getApplicationContext(),className);
+        mainIntent.putExtra("username", username);
         startActivity(mainIntent);
         finish();
     }

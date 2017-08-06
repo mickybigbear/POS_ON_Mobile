@@ -91,12 +91,9 @@ public class UserManager extends AppCompatActivity {
         return mEditor.commit();
     }
 
-    public void clearSession(){
-        mEditor.remove(KEY_USERNAME);
-        mEditor.remove(KEY_USER_ID);
-        mEditor.remove(KEY_SHOP_ID);
-        mEditor.remove(KEY_type);
-        mEditor.commit();
+    public boolean clearSession(){
+
+        return mEditor.clear().commit();
 
     }
 

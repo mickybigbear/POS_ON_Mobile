@@ -39,8 +39,11 @@
         <activity
             android:name=".setting.SettingsActivity"
             android:parentActivityName=".main.MainActivity"
-            android:theme="@style/SettingTheme"></activity>
-        <activity android:name=".setting.SaveQRCode"></activity>
+            android:theme="@style/SettingTheme">
+        </activity>
+        <activity android:name=".setting.SaveQRCode">
+
+        </activity>
         <activity
             android:name=".setting.ChooseMethodActivity"
             android:theme="@style/SettingTheme">

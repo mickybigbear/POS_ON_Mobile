@@ -44,7 +44,7 @@ public class HttpUtilsAsync {
      */
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(timeout);
+        client.setMaxRetriesAndTimeout(0, timeout);
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
@@ -56,7 +56,7 @@ public class HttpUtilsAsync {
      */
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(timeout);
+        client.setMaxRetriesAndTimeout(0, timeout);
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 
@@ -67,7 +67,7 @@ public class HttpUtilsAsync {
      */
     public static void get(String url, AsyncHttpResponseHandler responseHandler) {
         AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(timeout);
+        client.setMaxRetriesAndTimeout(0, timeout);
         client.get(getAbsoluteUrl(url), responseHandler);
     }
 

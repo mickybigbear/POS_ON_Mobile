@@ -34,6 +34,7 @@ public class RegisterStoreActivity extends AppCompatActivity {
     private RadioButton radioEmp;
     private RadioButton  radioOwn;
     private RadioGroup radioGroup;
+    private UserManager mManager;
     private String shopName ="", shopPass="", userName="", roleValue="";
     ProgressDialog progress;
     final int duration = Toast.LENGTH_SHORT;
@@ -48,16 +49,17 @@ public class RegisterStoreActivity extends AppCompatActivity {
         radioOwn = (RadioButton) findViewById(R.id.register_store_radio_owner);
         regisStoreButt = (Button) findViewById(R.id.register_store_store_button);
         radioGroup.check(R.id.register_store_radio_owner);
+        mManager  = new UserManager(this);
 
 
         regisStoreButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitRegis();
+                submitRegister();
             }
         });
     }
-    private void submitRegis(){
+    private void submitRegister(){
         Intent intent = getIntent();
         userName = intent.getStringExtra("username");
         shopName = shopNameText.getText().toString();
@@ -97,6 +99,8 @@ public class RegisterStoreActivity extends AppCompatActivity {
         Log.d("params", params.toString());
         final Context context = getApplicationContext();
         final int duration = Toast.LENGTH_SHORT;
+        HttpUtilsAsync.setTimeout(10000);
+        Log.d("timeout", "registerProcess: "+HttpUtilsAsync.getTimeout());
         HttpUtilsAsync.post(Constant.URL_SERVER+"/api/shop/", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -108,11 +112,12 @@ public class RegisterStoreActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(getBaseContext(), res, duration);
                         toast.show();
                     }
-                    else if(res.equals("Please contact your real owner to become owner!")){
+                    else if(res.equals("Sorry this name already exist")){
                         Toast toast = Toast.makeText(getBaseContext(), res, duration);
                         toast.show();
                     }
                     else{
+                        String type = response.get("type").toString();
                         String userID = response.get("userID").toString();
                         String shopID = response.get("shopID").toString();
                         CharSequence text = res;
@@ -125,6 +130,7 @@ public class RegisterStoreActivity extends AppCompatActivity {
                         Log.d("shopID", shopID);
                         Constant.SHOP_ID = Integer.valueOf(shopID);
                         Constant.USER_ID = Integer.valueOf(userID);
+                        mManager.saveSession(userName,shopID,userID,type);
                         Intent mainIntent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(mainIntent);
                     }
