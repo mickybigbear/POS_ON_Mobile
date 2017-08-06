@@ -100,7 +100,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
 
         String CREATE_TABLE_TRANS = "CREATE TABLE IF NOT EXISTS "+Table.TABLE_TRANS + " ( " +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
-                Table.COLUMN_TRANS_ID+" INTEGER  , "+
+                Table.COLUMN_TRANS_ID+" TEXT  , "+
                 Table.COLUMN_TRANS_REF_ID+" INTEGER , "+
                 Table.COLUMN_TRANS_USERNAME+" TEXT, " +
                 Table.COLUMN_TRANS_TOTAL+" REAL, " +
@@ -113,7 +113,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_TRANS_D = "CREATE TABLE IF NOT EXISTS "+Table.TABLE_TRANS_D + " ( " +
 //                Table.COLUMN_TRANS_SHOPID+" INTEGER , "+
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT ,"+
-                Table.COLUMN_TRANS_D_ID+" INTEGER, " +
+                Table.COLUMN_TRANS_D_ID+" TEXT, " +
                 Table.COLUMN_TRANS_D_NAME+" TEXT, " +
                 Table.COLUMN_TRANS_D_PRICE+" REAL, " +
                 Table.COLUMN_TRANS_D_COST+" REAL, " +
@@ -240,7 +240,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 //                Log.d(Table.TAG, jsonObj.toString());
 
-                values2.put(Table.COLUMN_TRANS_ID, jsonObj.getInt(Table.COLUMN_TRANS_ID));
+                values2.put(Table.COLUMN_TRANS_ID, jsonObj.getString(Table.COLUMN_TRANS_ID));
                 values2.put(Table.COLUMN_TRANS_REF_ID, jsonObj.getInt(Table.COLUMN_TRANS_REF_ID));
                 values2.put(Table.COLUMN_TRANS_USERNAME, jsonObj.getString(Table.COLUMN_TRANS_USERNAME));
                 values2.put(Table.COLUMN_TRANS_TOTAL,jsonObj.getDouble(Table.COLUMN_TRANS_TOTAL));
@@ -267,7 +267,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
 //                Log.d(Table.TAG, jsonObj.toString());
 
-                values2.put(Table.COLUMN_TRANS_D_ID, jsonObj.getInt(Table.COLUMN_TRANS_D_ID));
+                values2.put(Table.COLUMN_TRANS_D_ID, jsonObj.getString(Table.COLUMN_TRANS_D_ID));
                 values2.put(Table.COLUMN_TRANS_D_NAME, jsonObj.getString(Table.COLUMN_TRANS_D_NAME));
                 values2.put(Table.COLUMN_TRANS_D_PRICE, jsonObj.getDouble(Table.COLUMN_TRANS_D_PRICE));
                 values2.put(Table.COLUMN_TRANS_D_COST, jsonObj.getDouble(Table.COLUMN_TRANS_D_COST));

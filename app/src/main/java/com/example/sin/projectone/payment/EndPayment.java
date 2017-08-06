@@ -180,10 +180,10 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
                         }
                         progress.dismiss();
                         final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
-                        int tranId = -1;
+                        String tranId = "";
                         try {
                             JSONObject jsonObject = new JSONObject(new String(responseBody));
-                            tranId = jsonObject.getInt(Constant.KEY_JSON_TRANSACTIONID);
+                            tranId = jsonObject.getString(Constant.KEY_JSON_TRANSACTIONID);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
