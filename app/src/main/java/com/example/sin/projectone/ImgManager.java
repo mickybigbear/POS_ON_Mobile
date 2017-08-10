@@ -56,13 +56,20 @@ public class ImgManager {
     }
 
     public Boolean checkImageName(String imgName){
-        File file = new File(ApplicationHelper.getAppContext().getApplicationInfo().dataDir+"/app_"+Constant.FOLDER_PHOTO+"/"+imgName);
-        if(file.exists())
-            return true;
-//Do something
-        else
-            return  false;
 // Do something else.
+        File file = new File(ApplicationHelper.getAppContext().getApplicationInfo().dataDir+"/app_"+Constant.FOLDER_PHOTO+"/"+imgName);
+        if(file.exists()){
+            System.out.println(imgName+" is already there");
+            return true;
+        }else{
+            System.out.println(imgName+" not found in "+ApplicationHelper.getAppContext().getApplicationInfo().dataDir+"/app_"+Constant.FOLDER_PHOTO+"/");
+            return false;
+        }
+    }
+
+    public boolean fileExistance(String fname, Context context){
+        File file = context.getFileStreamPath(fname);
+        return file.exists();
     }
 
     public File saveImgToInternalStorage(Bitmap bitmapImage,String imgName){

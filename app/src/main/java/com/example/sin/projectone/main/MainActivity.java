@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity
             // Add the fragment to the 'fragment_container' FrameLayout
             fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container_main, firstFragment).commit();
+                    .add(R.id.fragment_container_main, firstFragment).commitAllowingStateLoss();
             toolbar.setTitle(getString(R.string.payment));
         }
 
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container_main, newFragment ,tag);
 
             //fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         }
 
 

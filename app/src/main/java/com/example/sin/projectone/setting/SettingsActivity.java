@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.sin.projectone.ImgManager;
+import com.example.sin.projectone.PaymentMethodManager;
 import com.example.sin.projectone.R;
 
 import java.util.List;
@@ -43,6 +45,9 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
     private static final String KEY_PREF_SYNC_CONN = "sync_frequency" ;
+    private ImgManager imgManager;
+    private PaymentMethodManager paymentMM;
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -131,6 +136,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setTitle("Setting");
         setupActionBar();
+        paymentMM = new PaymentMethodManager(this);
+        imgManager = ImgManager.getInstance();
+        setPrefFromExistFile("kbank_qrcode.png","kbank_qrcode_status");
+        setPrefFromExistFile("ktb_qrcode.png","ktb_qrcode_status");
     }
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -170,7 +179,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         loadHeadersFromResource(R.xml.pref_headers, target);
 
     }
+    public void setPrefFromExistFile(String fname, String preference){
+        System.out.println(preference+"--------------------------");
+//            Preference pref_status = findPreference(preference);
+        if(imgManager.checkImageName(fname)){
+            Log.d("setpref", "setPrefFromExistFile: true");
+            System.out.println(preference+"--------------------------");
+//                preference.setTitle("NOOOOOOOO");
+            paymentMM.setValue(preference,"true","boolean");
 
+        }
+        else{
+
+        }
+    }
     /**
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
@@ -189,6 +211,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class PaymentMethodPreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -203,8 +226,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
             bindPreferenceSummaryToValue(findPreference("paypal_link"));
             bindPreferenceSummaryToValue(findPreference("paypal_link"));
-            bindOnClickToPreference("kb_qrcode_help", this.getActivity());
+            bindOnClickToPreference("kbank_qrcode_help", this.getActivity());
             bindOnClickToPreference("ktb_qrcode_help", this.getActivity());
+
             Log.d("sync_frequency", "onCreate: "+ syncConnPref);
         }
 
@@ -218,9 +242,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
         public void bindOnClickToPreference(final String prefName, final Context context){
-            Preference pref = findPreference("kb_qrcode_help");
+            Preference pref = findPreference(prefName);
             System.out.print(prefName);
             System.out.println(findPreference(prefName));
+            System.out.println(pref+"-------------------------++++");
             Log.d("check Preferance", "bindOnClickToPreference: "+ pref.toString());
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -234,6 +259,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
         }
+
+
     }
     /**
      * This fragment shows general preferences only. It is used when the

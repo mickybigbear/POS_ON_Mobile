@@ -23,7 +23,9 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -97,7 +99,10 @@ public class ChooseMethodActivity extends AppCompatPreferenceActivity {
             return true;
         }
     };
-
+    private ImageView myImage;
+    private View view;
+    private AlertDialog.Builder builder;
+    Bitmap myBitmap;
     /**
      * Helper method to determine if the device has an extra-large screen. For
      * example, 10" tablets are extra-large.
@@ -137,13 +142,15 @@ public class ChooseMethodActivity extends AppCompatPreferenceActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
+        builder = new AlertDialog.Builder(this);
+
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
                 handleSendText(intent); // Handle text being sent
             } else if (type.startsWith("image/")) {
-                bindOnClickToPreference("payment_method_ktb", "ktb_qrcode", intent, this);
-                bindOnClickToPreference("payment_method_kplus", "kbank_qrcode", intent, this);
+                bindOnClickToPreference("payment_method_ktb", "ktb_qrcode", intent);
+                bindOnClickToPreference("payment_method_kplus", "kbank_qrcode", intent);
 //                handleSendImage(intent);
                 // Handle single image being sent
             }
@@ -178,22 +185,19 @@ public class ChooseMethodActivity extends AppCompatPreferenceActivity {
     }
 
 
-    public void bindOnClickToPreference(String prefName, final String methodName, final Intent intent, final Context context){
+    public void bindOnClickToPreference(String prefName, final String methodName, final Intent intent){
         Preference pref = findPreference(prefName);
         // 1. Instantiate an AlertDialog.Builder with its constructor
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+
+
         final DialogInterface.OnClickListener dialogOKClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked
-//                        Intent mainIntent = new Intent(getApplicationContext(), className);
-//                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        mManager.clearSession();
-//                        startActivity(mainIntent);
-//                        finish();
+                        finish();
                         break;
 
                 }
@@ -207,7 +211,6 @@ public class ChooseMethodActivity extends AppCompatPreferenceActivity {
         pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 Toast.makeText(getApplicationContext(), methodName, Toast.LENGTH_SHORT).show();
                 Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 if (imageUri != null) {
@@ -215,17 +218,17 @@ public class ChooseMethodActivity extends AppCompatPreferenceActivity {
                     Log.d(TAG, "handleSendImage: "+imageUri.getPath());
                     Log.d(TAG, "handleSendImage: "+imageUri.getUserInfo());
                     Log.d(TAG, "handleSendImage: "+imageUri.getHost());
-                    if(imgManager.checkImageName(methodName)){
-                        builder.setMessage("Done")
-                                .setTitle("title")
-                                .setCancelable(true)
-
-                                .setPositiveButton("ok", dialogOKClickListener)
-                                .show();
+                    Log.d(TAG, "handleSendImage: "+methodName);
+                    String result = imageUri.getPath();
+                    int cut = result.lastIndexOf('/');
+                    if (cut != -1) {
+                        result = result.substring(cut + 1);
                     }
-                    else{
-                        imgManager.saveImgURIToInternalStorage(imageUri, methodName, context);
-                    }
+                    imgManager.saveImgURIToInternalStorage(imageUri, methodName+".png", getApplicationContext());
+                    builder.setMessage("QR code has been set.")
+                            .setCancelable(true)
+                            .setPositiveButton("FINISH", dialogOKClickListener)
+                            .show();
                     // Update UI to reflect image being shared
                 }
                 return false;

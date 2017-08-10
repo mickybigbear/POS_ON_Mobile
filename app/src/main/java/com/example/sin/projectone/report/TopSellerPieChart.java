@@ -195,9 +195,9 @@ public class TopSellerPieChart extends android.app.Fragment {
                 data.setHasLabelsOutside(true);
                 data.setHasCenterCircle(true);
                 data.setCenterText1(type.toUpperCase());
-                data.setCenterText1Color(Color.WHITE);
+                data.setCenterText1Color(Color.BLACK);
                 data.setCenterText2("10 Best Sell");
-                data.setCenterText2Color(Color.WHITE);
+                data.setCenterText2Color(Color.BLACK);
                 chart.setPieChartData(data);
 
             } catch (JSONException e) {

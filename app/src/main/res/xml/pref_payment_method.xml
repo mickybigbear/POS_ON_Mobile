@@ -27,12 +27,12 @@
         android:key="pref_key_storage_settings">
         <Preference
             android:title="@string/pref_title_qrcode_help"
-            android:key="kb_qrcode_help"/>
+            android:key="ktb_qrcode_help"/>
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="kb_qrcode_status"
-
+            android:key="ktb_qrcode_status"
+            android:selectable="false"
             android:title="@string/pref_qrcode_status" />
         <SwitchPreference
             android:defaultValue="false"
@@ -45,6 +45,10 @@
     <PreferenceCategory
         android:title="@string/pref_payment_kplus"
         android:key="pref_key_storage_settings">
+        <Preference
+            android:title="@string/pref_title_qrcode_help"
+            android:key="kbank_qrcode_help"/>
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="kbank_qrcode_status"
