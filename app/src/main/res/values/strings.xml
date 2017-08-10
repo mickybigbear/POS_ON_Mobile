@@ -8,11 +8,22 @@
     <string name="label_product_type">Type :</string>
     <string name="label_product_cost">Cost :</string>
     <string name="label_product_details">Details :</string>
-    <string name="unit_bath">Bath</string>
+    <string name="unit_bath">Baht</string>
     <string name="zero">0.00</string>
     <string name="add_product">add product</string>
     <string name="view_product">view product</string>
     <string name="label_product_total">Total :</string>
+    <string name="label_product_method">Method :</string>
+    <string-array name="spinner_method">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
     <string name="label_product_discount">Discount :</string>
     <string name="btn_submit">SUBMIT</string>
     <string name="btn_add">ADD</string>
@@ -162,4 +173,5 @@
 
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="demo_collection">Demo Collection</string>
+
 </resources>

@@ -49,7 +49,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         public static final String COLUMN_TRANS_USERNAME = "username";
         public static final String COLUMN_TRANS_TOTAL = "total";
         public static final String COLUMN_TRANS_DISCOUNT = "discount";
-        public static final String COLUMN_TRANS_TYPE = "type";
+        public static final String COLUMN_TRANS_TYPE = "method";
         public static final String COLUMN_TRANS_DISCOUNT_DETAIL = "discountDetail";
         public static final String COLUMN_TRANS_STATUS = "status";
         public static final String COLUMN_TRANS_CREATE_AT = "createAt";
@@ -106,7 +106,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 Table.COLUMN_TRANS_USERNAME+" TEXT, " +
                 Table.COLUMN_TRANS_TOTAL+" REAL, " +
                 Table.COLUMN_TRANS_DISCOUNT+ " REAL, "+
-                Table.COLUMN_TRANS_TYPE+ " INTEGER," +
+                Table.COLUMN_TRANS_TYPE+ " TEXT," +
                 Table.COLUMN_TRANS_DISCOUNT_DETAIL + " TEXT, " +
                 Table.COLUMN_TRANS_CREATE_AT + " TEXT, " +
                 Table.COLUMN_TRANS_STATUS+" INTEGER," +
@@ -247,7 +247,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 values2.put(Table.COLUMN_TRANS_USERNAME, jsonObj.getString(Table.COLUMN_TRANS_USERNAME));
                 values2.put(Table.COLUMN_TRANS_TOTAL,jsonObj.getDouble(Table.COLUMN_TRANS_TOTAL));
                 values2.put(Table.COLUMN_TRANS_DISCOUNT, jsonObj.getDouble(Table.COLUMN_TRANS_DISCOUNT));
-                values2.put(Table.COLUMN_TRANS_TYPE, jsonObj.getInt(Table.COLUMN_TRANS_TYPE));
+                values2.put(Table.COLUMN_TRANS_TYPE, jsonObj.getString(Table.COLUMN_TRANS_TYPE));
                 values2.put(Table.COLUMN_TRANS_DISCOUNT_DETAIL, jsonObj.getString(Table.COLUMN_TRANS_DISCOUNT_DETAIL));
                 values2.put(Table.COLUMN_TRANS_STATUS, jsonObj.getString(Table.COLUMN_TRANS_STATUS));
                 values2.put(Table.COLUMN_TRANS_CREATE_AT, jsonObj.getString(Table.COLUMN_TRANS_CREATE_AT));
@@ -377,7 +377,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public JSONObject getJSONTransaction(ArrayList<Product> products, String detail, float discount, float total){
+    public JSONObject getJSONTransaction(ArrayList<Product> products, String detail, float discount,String method, float total){
         UserManager userManager = new UserManager(ApplicationHelper.getAppContext());
         JSONObject transation = new JSONObject();
         JSONObject obj;
@@ -390,6 +390,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 transation.put(Constant.KEY_JSON_SHOPID,userManager.getShopId());
                 transation.put(Constant.KEY_JSON_DETAIL_DISCOUNT, detail);
                 transation.put(Constant.KEY_JSON_DISCOUNT, discount);
+                transation.put(Constant.KEY_JSON_METHOD, method);
                 transation.put(Constant.KEY_JSON_TOTAL, total);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -444,7 +445,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     }
 
     public  Cursor getTransaction(){
-        String sql = "SELECT tt._id, tt.transactionID,tt.total,tt.createAt, tt.username, tt.discount, tt.type FROM transaction_table tt";
+        String sql = "SELECT tt._id, tt.transactionID,tt.total,tt.createAt, tt.username, tt.discount, tt.method FROM transaction_table tt";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         return  cursor;

@@ -1,6 +1,7 @@
 package com.example.sin.projectone.payment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -8,15 +9,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,7 @@ import com.example.sin.projectone.ApplicationHelper;
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.MessageAlertDialog;
 import com.example.sin.projectone.OnBackPressedInterface;
+import com.example.sin.projectone.PaymentMethodManager;
 import com.example.sin.projectone.Product;
 import com.example.sin.projectone.ProductAdapter;
 import com.example.sin.projectone.ProductDBHelper;
@@ -31,13 +37,18 @@ import com.example.sin.projectone.ProductPaymentDialog;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.WebService;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+
+import static com.example.sin.projectone.R.id.imageView;
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -47,7 +58,7 @@ import cz.msebera.android.httpclient.Header;
 // * Use the {@link EndPayment#newInstance} factory method to
 // * create an instance of this fragment.
 // */
-public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPressedInterface{
+public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPressedInterface {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,6 +75,9 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
     private TextView text_total;
     private Button btn_send;
     private EditText edt_discount;
+    private Spinner spinnerMethod;
+    private PaymentMethodManager paymentMM;
+    private ImageView paymentQRCode;
 
     private OnFragmentInteractionListener mListener;
 
@@ -106,6 +120,7 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        paymentMM = new PaymentMethodManager(getActivity());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -121,7 +136,24 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
         adapter = new ProductAdapter(ApplicationHelper.getAppContext(),products,R.layout.list_item_endpayment);
         _productList.setAdapter(adapter);
         _productList.setOnItemClickListener(onItemClickListener());
+        spinnerMethod = (Spinner) view.findViewById(R.id.spinner_method);
+        spinnerMethod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String label = parent.getItemAtPosition(position).toString();
+
+                // Showing selected spinner item
+                Toast.makeText(parent.getContext(), "You selected: " + label,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        loadSpinnerData();
         btn_send = (Button) view.findViewById(R.id.btn_send);
         if(adapter.getCount()<=0){
             btn_send.setEnabled(false);
@@ -131,6 +163,32 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
         text_total.setText(String.valueOf(getTotal()));
         btn_send.setOnClickListener(onSendClick());
         return view;
+    }
+
+    private void loadSpinnerData() {
+        List<String> list = new ArrayList<String>();
+        list.add("CASH");
+        if(Boolean.valueOf(paymentMM.getValue("paypal_status", "boolean"))){
+            list.add("PAYPAL");
+        }
+        if(Boolean.valueOf(paymentMM.getValue("ktb_status", "boolean"))){
+            list.add("KTB");
+        }
+        if(Boolean.valueOf(paymentMM.getValue("kbank_status", "boolean"))){
+            list.add("KBANK");
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, list);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerMethod.setAdapter(dataAdapter);
+
     }
 
     private View.OnClickListener onSendClick(){
@@ -150,70 +208,159 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
                     }
                 }
                 final FragmentManager fragmentManager = getFragmentManager();
-                final ProgressDialog progress = ProgressDialog.show(EndPayment.this.getActivity(), "Loading",
+                final ProgressDialog progress = ProgressDialog.show(EndPayment.this.getActivity(), "Loadingssssss",
                         "Please wait ...", true);
-
-                String detail = "";
+                final String detail = "";
                 float discount = 0.0f;
                 float total = 0.0f;
+                String method = "";
                 try{
+
                     discount = Float.parseFloat(edt_discount.getText().toString());
                     //total = Float.parseFloat(text_total.getText().toString());
                     total = getTotal();
+                    method = spinnerMethod.getSelectedItem().toString();
+                    AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
+                    LayoutInflater factory = LayoutInflater.from(getActivity());
+                    final View view = factory.inflate(R.layout.alert_dialog_payment_method, null,false);
+                    dialog.setView(view);
+                    paymentQRCode = (ImageView) view.findViewById(R.id.imageViewPaymentMethod) ;
+                    if(method.equals("PAYPAL")){
+                        loadImage("paypal_qrcode.png", paymentQRCode);
+                    }
+                    else if (method.equals("KTB")){
+                        loadImage("ktb_qrcode.png", paymentQRCode);
+                    }
+                    else if (method.equals("KBANK")){
+                        loadImage("kbank_qrcode.png", paymentQRCode);
+                    }
+                    else{
+                        JSONObject transaction =  ProductDBHelper.getInstance(ApplicationHelper.getAppContext()).getJSONTransaction(products,detail, discount, method, total);
+                        //basketProduct.clear(); //  block send data more once transaction
+                        WebService.sendTransaction(new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                // Update DB
+                                Product updateP;
+                                ProductDBHelper dbHelper = ProductDBHelper.getInstance(getActivity());
+                                for(Product p : products){
+                                    int a = p.qty;
+                                    updateP = (Product) p.clone();
+                                    updateP.qty = dbHelper.searchProductByID(p.id).qty - p.qty;
+                                    dbHelper.UpdateProduct(updateP);
+                                }
+                                progress.dismiss();
+                                final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
+                                String tranId = "";
+                                try {
+                                    JSONObject jsonObject = new JSONObject(new String(responseBody));
+                                    tranId = jsonObject.getString(Constant.KEY_JSON_TRANSACTIONID);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Bundle b = new Bundle();
+                                b.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,"TrasactionID : "+ String.valueOf(tranId));
+                                b.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, "Finished sending data");
+                                b.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
+                                final MessageAlertDialog dialog2 = MessageAlertDialog.newInstance(b);
+                                dialog2.show(fragmentManager,tag);
+                                new CountDownTimer(3000, 1000) {
+                                    @Override
+                                    public void onTick(long millisUntilFinished) {
+                                        // TODO Auto-generated method stub
+                                    }
+                                    @Override
+                                    public void onFinish() {
+                                        // TODO Auto-generated method stub
+                                        dialog2.dismiss();
+                                    }
+                                }.start();
+                                mListener.onSuccessPayment();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                progress.dismiss();
+                                mListener.onFailurePayment();
+                            }
+                        },transaction);
+                        return;
+                    }
+                    final float finalDiscount = discount;
+                    final String finalMethod = method;
+                    final float finalTotal = total;
+                    dialog.setCancelable(true)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    JSONObject transaction =  ProductDBHelper.getInstance(ApplicationHelper.getAppContext()).getJSONTransaction(products,detail, finalDiscount, finalMethod, finalTotal);
+                                    //basketProduct.clear(); //  block send data more once transaction
+                                    WebService.sendTransaction(new AsyncHttpResponseHandler() {
+                                        @Override
+                                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                            // Update DB
+                                            Product updateP;
+                                            ProductDBHelper dbHelper = ProductDBHelper.getInstance(getActivity());
+                                            for(Product p : products){
+                                                int a = p.qty;
+                                                updateP = (Product) p.clone();
+                                                updateP.qty = dbHelper.searchProductByID(p.id).qty - p.qty;
+                                                dbHelper.UpdateProduct(updateP);
+                                            }
+                                            progress.dismiss();
+                                            final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
+                                            String tranId = "";
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(new String(responseBody));
+                                                tranId = jsonObject.getString(Constant.KEY_JSON_TRANSACTIONID);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            Bundle b = new Bundle();
+                                            b.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,"TrasactionID : "+ String.valueOf(tranId));
+                                            b.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, "Finished sending data");
+                                            b.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
+                                            final MessageAlertDialog dialog2 = MessageAlertDialog.newInstance(b);
+                                            dialog2.show(fragmentManager,tag);
+                                            new CountDownTimer(3000, 1000) {
+                                                @Override
+                                                public void onTick(long millisUntilFinished) {
+                                                    // TODO Auto-generated method stub
+                                                }
+                                                @Override
+                                                public void onFinish() {
+                                                    // TODO Auto-generated method stub
+                                                    dialog2.dismiss();
+                                                }
+                                            }.start();
+                                            mListener.onSuccessPayment();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                            progress.dismiss();
+                                            mListener.onFailurePayment();
+                                        }
+                                    },transaction);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    progress.dismiss();
+                                    return;
+                                }
+                            })
+                            .show();
+                    dialog.show();
+
                 }
                 catch (Exception e){
                     return;
                 }
-                JSONObject transaction =  ProductDBHelper.getInstance(ApplicationHelper.getAppContext()).getJSONTransaction(products,detail,discount,total);
-                //basketProduct.clear(); //  block send data more once transaction
-                WebService.sendTransaction(new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        // Update DB
-                        Product updateP;
-                        ProductDBHelper dbHelper = ProductDBHelper.getInstance(getActivity());
-                        for(Product p : products){
-                            int a = p.qty;
-                            updateP = (Product) p.clone();
-                            updateP.qty = dbHelper.searchProductByID(p.id).qty - p.qty;
-                            dbHelper.UpdateProduct(updateP);
-                        }
-                        progress.dismiss();
-                        final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
-                        String tranId = "";
-                        try {
-                            JSONObject jsonObject = new JSONObject(new String(responseBody));
-                            tranId = jsonObject.getString(Constant.KEY_JSON_TRANSACTIONID);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
 
-                        Bundle b = new Bundle();
-                        b.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,"TrasactionID : "+ String.valueOf(tranId));
-                        b.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, "Finished sending data");
-                        b.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
-                        final MessageAlertDialog dialog2 = MessageAlertDialog.newInstance(b);
-                        dialog2.show(fragmentManager,tag);
-                        new CountDownTimer(3000, 1000) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                // TODO Auto-generated method stub
-                            }
-                            @Override
-                            public void onFinish() {
-                                // TODO Auto-generated method stub
-                                dialog2.dismiss();
-                            }
-                        }.start();
-                        mListener.onSuccessPayment();
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        progress.dismiss();
-                        mListener.onFailurePayment();
-                    }
-                },transaction);
 
             }
         };
@@ -281,6 +428,8 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -309,7 +458,9 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
         }
         return total;
     }
+    private void sendPayment(){
 
+    }
     private ListView.OnItemClickListener onItemClickListener(){
         return new ListView.OnItemClickListener(){
             @Override
@@ -329,6 +480,20 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
         };
     }
 
+    private void loadImage(String fileName, ImageView imageView){
+        String path = ApplicationHelper.getAppContext().getApplicationInfo().dataDir+"/app_"+Constant.FOLDER_PHOTO+"/";
+        println(path);
+        File file = new File(path+fileName);
+        Picasso picasso = Picasso.with(getActivity());
+        picasso.invalidate(file);
+        picasso.load(file)
+                .fit()
+                .centerInside()
+                .into(imageView);
+    }
+    private void println(String text){
+        System.out.println(text);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==Constant.REQUEST_CODE_PRODUCT_PAYMENT_DIALOG &&

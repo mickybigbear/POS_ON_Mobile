@@ -41,9 +41,21 @@ public class PaymentMethodManager extends AppCompatActivity {
     }
 
 
-    public String getValue(String key){
-        return mPrefs.getString(key, "");
+    public String getValue(String key, String type){
+        String value = "";
+        if(type=="boolean"){
+            value = String.valueOf(mPrefs.getBoolean(key, false));
+        }
+        else if(type=="int"){
+            value = String.valueOf(mPrefs.getInt(key, 0));
+        }
+        else{
+            value = mPrefs.getString(key, "");
+        }
+        return value;
     }
+
+
 
     public boolean setValue(String key, String value, String type){
         if(type=="boolean"){
@@ -60,6 +72,7 @@ public class PaymentMethodManager extends AppCompatActivity {
 
         return mEditor.commit();
     }
+
 
 
 }

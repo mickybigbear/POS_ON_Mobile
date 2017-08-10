@@ -96,7 +96,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
     private boolean loadTransaction(){
         // debug
         UserManager userManager = new UserManager(getActivity().getApplicationContext());
-        HttpUtilsAsync.setTimeout(5000);
+        HttpUtilsAsync.setTimeout(15000);
         HttpUtilsAsync.get(Constant.URL_SEND_TRANSACTION + userManager.getShopId() /*Constant.SHOP_ID*/, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -118,7 +118,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     System.out.println(response);
                                     try {
-                                        ProductDBHelper.getInstance(list_fragment.this.getActivity()).loadTransactionDetail(response.getJSONArray("transactionDetail"));
+                                        ProductDBHelper.getInstance(list_fragment.this.getActivity()).loadTransactionDetail(response.getJSONArray("transactiondetail"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
