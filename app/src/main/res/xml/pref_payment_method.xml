@@ -37,6 +37,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="ktb_status"
+            android:enabled="false"
             android:title="@string/pref_title_status" />
     </PreferenceCategory>
 
@@ -57,6 +58,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="kbank_status"
+            android:enabled="false"
             android:title="@string/pref_title_status" />
     </PreferenceCategory>
 </PreferenceScreen>

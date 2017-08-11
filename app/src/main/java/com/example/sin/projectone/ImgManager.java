@@ -72,6 +72,12 @@ public class ImgManager {
         return file.exists();
     }
 
+    public Boolean deleteImage(String imgName){
+        System.out.println("delete "+imgName);
+        File file = new File(ApplicationHelper.getAppContext().getApplicationInfo().dataDir+"/app_"+Constant.FOLDER_PHOTO+"/"+imgName);
+        return  file.delete();
+    }
+
     public File saveImgToInternalStorage(Bitmap bitmapImage,String imgName){
         ContextWrapper cw = new ContextWrapper(ApplicationHelper.getAppContext());
         // path to /data/data/yourapp/app_data/imageDir

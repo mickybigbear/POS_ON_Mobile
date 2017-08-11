@@ -95,12 +95,15 @@ public class Main extends Fragment {
                             createDate = createDate.replace(' ','T');
                             System.out.println(jsonObj.getString("transactionID"));
                             System.out.println(jsonObj.getString("createAt"));
+                            System.out.println("+++++++++++++++++++++++");
+
                             HttpUtilsAsync.get(Constant.URL_GET_TRANSACTION_DETAIL+jsonObj.getString("transactionID")+"/"+createDate, null, new JsonHttpResponseHandler(){
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     System.out.println(response);
                                     try {
-                                        ProductDBHelper.getInstance(Main.this.getActivity()).loadTransactionDetail(response.getJSONArray("transactionDetail"));
+                                        System.out.println((response.getJSONArray("transactiondetail")));
+                                        ProductDBHelper.getInstance(Main.this.getActivity()).loadTransactionDetail(response.getJSONArray("transactiondetail"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }

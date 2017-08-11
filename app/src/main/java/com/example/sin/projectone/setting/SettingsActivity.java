@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -23,14 +25,25 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.PaymentMethodManager;
 import com.example.sin.projectone.R;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static android.R.attr.width;
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -140,6 +153,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         imgManager = ImgManager.getInstance();
         setPrefFromExistFile("kbank_qrcode.png","kbank_qrcode_status");
         setPrefFromExistFile("ktb_qrcode.png","ktb_qrcode_status");
+
     }
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -211,10 +225,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class PaymentMethodPreferenceFragment extends PreferenceFragment {
-
+        private PaymentMethodManager paymentMM;
+        private ImgManager imgManager;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            paymentMM = new PaymentMethodManager(getActivity());
+            imgManager = ImgManager.getInstance();
             addPreferencesFromResource(R.xml.pref_payment_method);
             setHasOptionsMenu(true);
 
@@ -224,8 +241,43 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
             String syncConnPref = sharedPref.getString(SettingsActivity.KEY_PREF_SYNC_CONN, "");
-            bindPreferenceSummaryToValue(findPreference("paypal_link"));
-            bindPreferenceSummaryToValue(findPreference("paypal_link"));
+            Preference ckboxPref = findPreference("paypal_link");
+            System.out.println("==========");
+            System.out.println(ckboxPref.getKey());
+            ckboxPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+                @Override
+                public boolean onPreferenceChange(Preference preference,
+                                                  Object newValue) {
+                    try {
+                        if(imgManager.checkImageName("paypal_qrcode.png")){
+                            if(imgManager.deleteImage("paypal_qrcode.png")){
+                                System.out.println("paypal_qrcode.png deteled");
+
+                            }
+
+                        }
+                        System.out.println(PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getString(preference.getKey(), "")+"****/*/*/*/**");
+                        imgManager.saveImgToInternalStorage(encodeAsBitmap(PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getString(preference.getKey(), "")),"paypal_qrcode.png");
+
+
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                    //Do stuff
+                    return true;
+                }
+            });
+
+
+//            bindPreferenceSummaryToValue(findPreference("paypal_link"));
+//            bindPreferenceSummaryToValue(findPreference("paypal_link"));
+            setEnablePaymentMethod("ktb_qrcode_status", this.getActivity());
+            setEnablePaymentMethod("kbank_qrcode_status", this.getActivity());
             bindOnClickToPreference("kbank_qrcode_help", this.getActivity());
             bindOnClickToPreference("ktb_qrcode_help", this.getActivity());
 
@@ -241,17 +293,72 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
+        Bitmap encodeAsBitmap(String str) throws WriterException {
+            int WIDTH=500;
+            BitMatrix result;
+            WindowManager manager = (WindowManager) this.getActivity().getSystemService(WINDOW_SERVICE);
+            Display display = manager.getDefaultDisplay();
+            Point point = new Point();
+            display.getSize(point);
+            int width = point.x;
+            try {
+                result = new MultiFormatWriter().encode(str,
+                        BarcodeFormat.QR_CODE, width, width, null);
+            } catch (IllegalArgumentException iae) {
+                // Unsupported format
+                return null;
+            }
+            int w = result.getWidth();
+            int h = result.getHeight();
+            int[] pixels = new int[w * h];
+            for (int y = 0; y < h; y++) {
+                int offset = y * w;
+                for (int x = 0; x < w; x++) {
+                    pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+                }
+            }
+            Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, width, 0, 0, w, h);
+            return bitmap;
+        }
+        public void setEnablePaymentMethod(final String prefName, final Context context){
+            System.out.println("++++-------------------------++++");
+            String tempPref = prefName.substring(0,prefName.indexOf('_'))+"_status";
+            Preference pref = findPreference(tempPref);
+            System.out.println(tempPref);
+//            Preference pref = findPreference(prefName);
+            System.out.print(prefName);
+            System.out.println(findPreference(prefName));
+            System.out.println(pref+"-------------------------++++");
+            Log.d("check Preferance", "bindOnClickToPreference: "+ pref.toString());
+            if(Boolean.valueOf(paymentMM.getValue(prefName,"boolean"))){
+                System.out.println(tempPref+"trueeee");
+                pref.setEnabled(true);
+            }
+            else{
+                Toast.makeText(context, "Need to set QR code first."+tempPref, Toast.LENGTH_SHORT).show();
+            }
+            System.out.println("++++-------------------------++++");
+        }
         public void bindOnClickToPreference(final String prefName, final Context context){
             Preference pref = findPreference(prefName);
             System.out.print(prefName);
             System.out.println(findPreference(prefName));
             System.out.println(pref+"-------------------------++++");
             Log.d("check Preferance", "bindOnClickToPreference: "+ pref.toString());
+            if(Boolean.valueOf(paymentMM.getValue("prefName","boolean"))){
+                pref.setEnabled(true);
+            }
+            else{
+                Toast.makeText(context, "Need to set QR code first."+prefName, Toast.LENGTH_SHORT).show();
+            }
+
             pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
 
-                    Toast.makeText(context, "you clicl on"+prefName, Toast.LENGTH_SHORT).show();
+
 
 
 

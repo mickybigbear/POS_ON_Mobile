@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     System.out.println(response);
                                     try {
-                                        ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).loadTransactionDetail(response.getJSONArray("transactionDetail"));
+                                        ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).loadTransactionDetail(response.getJSONArray("transactiondetail"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
