@@ -208,7 +208,7 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
                     }
                 }
                 final FragmentManager fragmentManager = getFragmentManager();
-                final ProgressDialog progress = ProgressDialog.show(EndPayment.this.getActivity(), "Loadingssssss",
+                final ProgressDialog progress = ProgressDialog.show(EndPayment.this.getActivity(), "Loading",
                         "Please wait ...", true);
                 final String detail = "";
                 float discount = 0.0f;
