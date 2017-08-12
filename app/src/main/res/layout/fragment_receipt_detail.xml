@@ -152,6 +152,7 @@
                             android:text="Method :" />
 
                         <TextView
+                            android:id="@+id/receipt_detail_payment_method"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

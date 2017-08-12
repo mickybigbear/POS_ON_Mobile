@@ -34,11 +34,14 @@ public class TransDetailListCursor extends CursorAdapter {
         TextView textName = (TextView) view.findViewById(R.id.receipt_detail_list_product_name);
         TextView textPrice = (TextView) view.findViewById(R.id.receipt_detail_list_product_price);
         TextView textQty = (TextView) view.findViewById(R.id.receipt_detail_list_product_qty);
+
         // Extract properties from cursor
         String nameValue = cursor.getString(cursor.getColumnIndexOrThrow("name"));
         Double priceValue = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
         String qtyValue = cursor.getString(cursor.getColumnIndexOrThrow("qty"));
+
         // Populate fields with extracted properties
+
         textName.setText(nameValue);
         textPrice.setText(String.valueOf(priceValue));
         textQty.setText(qtyValue);

@@ -75,6 +75,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
         String strTotal = String.valueOf(cursor.getDouble(cursor.getColumnIndex("total")));
         String strDisc = String.valueOf(cursor.getDouble(cursor.getColumnIndex("discount")));
         String strCreate = cursor.getString(cursor.getColumnIndex("createAt"));
+        String methodValue = cursor.getString(cursor.getColumnIndexOrThrow("method"));
         Log.d("listView", strTrans);
         Log.d("listView", strUser);
         Log.d("listView", strTotal);
@@ -87,6 +88,7 @@ public class list_fragment extends ListFragment implements AdapterView.OnItemCli
         args.putString("total", strTotal);
         args.putString("discount", strDisc);
         args.putString("create", strCreate);
+        args.putString("method", methodValue);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(null);
         transDetail.setArguments(args);

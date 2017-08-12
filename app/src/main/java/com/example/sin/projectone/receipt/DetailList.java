@@ -28,11 +28,13 @@ public class DetailList extends ListFragment implements AdapterView.OnItemClickL
         TextView  textDisc= (TextView) view.findViewById(R.id.receipt_detail_text_discount);
         TextView  textDate = (TextView) view.findViewById(R.id.receipt_detail_text_date);
         TextView textSubTotal = (TextView) view.findViewById(R.id.receipt_detail_text_subtotal);
+        TextView textMethod = (TextView) view.findViewById(R.id.receipt_detail_payment_method);
         String receiTrans = getArguments().getString("transactionID");
         String receiUser = getArguments().getString("username");
         String receiTotal = getArguments().getString("total");
         String receiDate = getArguments().getString("create");
         String receiDisc = getArguments().getString("discount");
+        String receMethod = getArguments().getString("method");
         Double dTotal = Double.parseDouble(receiTotal);
         Double dDisc = Double.parseDouble(receiDisc);
         Double dSubTotal = dTotal - dDisc;
@@ -41,6 +43,7 @@ public class DetailList extends ListFragment implements AdapterView.OnItemClickL
         textTotal.setText(receiTotal);
         textDisc.setText(receiDisc);
         textDate.setText(receiDate);
+        textMethod.setText(receMethod);
         textSubTotal.setText(dSubTotal.toString());
         return view;
 
