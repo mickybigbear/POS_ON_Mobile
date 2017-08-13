@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.Map;
+
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
@@ -55,11 +57,18 @@ public class PaymentMethodManager extends AppCompatActivity {
         return value;
     }
 
+    public Map<String, ?> getAllValue(){
+        Map<String, ?> allEntries = mPrefs.getAll();
+        return  allEntries;
+    }
+
 
 
     public boolean setValue(String key, String value, String type){
         if(type=="boolean"){
+
             Boolean varBool = Boolean.valueOf(value);
+            System.out.println(varBool.getClass().getName()+"in set value boolean");
             mEditor.putBoolean(key, varBool);
         }
         else if(type=="int"){

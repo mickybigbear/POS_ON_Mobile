@@ -48,15 +48,16 @@ public class Constant {
 
     //
     //url web Service
-    public final static String URL_SERVER                   = "http://172.104.188.6:3001";
+//    public final static String URL_SERVER                   = "http://172.104.188.6:3001";
     //public final static String URL_SERVER                   = "http://172.104.188.6:3001";
-    public final static String URL_SERVER                   = "http://192.168.1.105:3001";
+    public final static String URL_SERVER                   = "http://192.168.1.42:3001";
     public final static String URL_GET_ALL_PRODUCT          = URL_SERVER+"/api/product/";
     public final static String URL_GET_IMG                  = URL_SERVER+"/api/product/";
     public final static String URL_SEND_TRANSACTION         = URL_SERVER+"/api/transaction/";
     public final static String URL_GET_TRANSACTION_DETAIL   = URL_SERVER+"/api/transactionDetail/";
     public final static String URL_SEND_UPDATE_PRODUCT      = URL_SERVER+"/api/product/";
     public final static String URL_SEND_ADD_PRODUCT         = URL_SERVER+"/api/product2/";
+    public final static String URL_SEND_SETTING             = URL_SERVER+"/api/setting";
     // Tag Fragment
     public final static String TAG_FRAGMENT_CONTAINER = "tag_fragment_container";
     public final static String TAG_FRAGMENT_ITEM_EDIT = "tag_fragment_item_edit";

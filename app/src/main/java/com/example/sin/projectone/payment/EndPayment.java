@@ -141,11 +141,7 @@ public class EndPayment extends Fragment implements UpdatePageFragment, OnBackPr
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String label = parent.getItemAtPosition(position).toString();
 
-                // Showing selected spinner item
-                Toast.makeText(parent.getContext(), "You selected: " + label,
-                        Toast.LENGTH_LONG).show();
             }
 
             @Override

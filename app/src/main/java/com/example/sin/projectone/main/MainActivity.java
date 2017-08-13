@@ -31,6 +31,7 @@ import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
 import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.OnBackPressedInterface;
+import com.example.sin.projectone.PaymentMethodManager;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
 import com.example.sin.projectone.SignInActivity;
@@ -43,6 +44,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     private MenuItem itemAction1, itemAction2;
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
+    private PaymentMethodManager paymentMM;
     private boolean flagFirstFragment = false;
 
     @Override
@@ -66,7 +70,9 @@ public class MainActivity extends AppCompatActivity
         this.deleteDatabase(ProductDBHelper.DATABASE_NAME); // debug
         checkAndReqPermission();
         mManager = new UserManager(this);
+        paymentMM = new PaymentMethodManager(this);
         loadProducts();
+        loadSetting(mManager);
         boolean checkSession = mManager.checkSession();
 
         if(checkSession) {
@@ -280,6 +286,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        loadSetting(mManager);
+
+        // put your code here...
+
+    }
 
 
     private boolean loadProducts(){
@@ -347,6 +361,57 @@ public class MainActivity extends AppCompatActivity
             }
         });
         return true;
+    }
+
+    public void loadSetting(UserManager userManager){
+        HttpUtilsAsync.setTimeout(15000);
+        System.out.println(Constant.URL_SEND_SETTING+"/"+userManager.getShopId());
+        HttpUtilsAsync.get(Constant.URL_SEND_SETTING+"/"+userManager.getShopId(), null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    String res = response.get("setting").toString();
+                    System.out.println(res);
+                    Map<String, ?> allEntries = paymentMM.getAllValue();
+                    System.out.println(allEntries);
+                    for(int i=0;i<response.getJSONArray("setting").length();i++){
+                        JSONObject jsonObj = response.getJSONArray("setting").getJSONObject(i);
+                        System.out.println(jsonObj.getString("name"));
+                        System.out.println(jsonObj.getString("value"));
+                        if(jsonObj.getString("value").equals("true")||jsonObj.getString("value").equals("false")){
+                            paymentMM.setValue(jsonObj.getString("name"),jsonObj.getString("value"),"boolean");
+                        }
+                        else{
+                            paymentMM.setValue(jsonObj.getString("name"),jsonObj.getString("value"),"string");
+                        }
+                    }
+//                    for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+//                        System.out.println("map values "+ entry.getKey() + ": " + entry.getValue().toString());
+//                        if(entry.getValue().toString().equals("true")||entry.getValue().toString().equals("false")){
+//                            paymentMM.setValue(entry.getKey(),entry.getValue().toString(),"boolean");
+//                        }
+//                        else{
+//                            paymentMM.setValue(entry.getKey(),entry.getValue().toString(),"string");
+//                        }
+//
+//                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+            }
+            @Override
+            public void onFinish() {
+
+            }
+        });
     }
 
     private void openActivity(final Class className){

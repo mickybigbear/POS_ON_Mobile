@@ -20,15 +20,14 @@
             android:title="@string/pref_title_status" />
     </PreferenceCategory>
 
-    <Preference layout="@layout/pref_divider" />
+    <Preference
+        layout="@layout/pref_divider"
+        android:enabled="false"
+        android:selectable="false"/>
 
     <PreferenceCategory
         android:title="@string/pref_payment_ktb"
         android:key="pref_key_storage_settings">
-        <Preference
-            android:title="@string/pref_title_qrcode_help"
-            android:key="ktb_qrcode_help"/>
-
         <SwitchPreference
             android:defaultValue="false"
             android:key="ktb_qrcode_status"
@@ -41,15 +40,14 @@
             android:title="@string/pref_title_status" />
     </PreferenceCategory>
 
-    <Preference layout="@layout/pref_divider" />
+    <Preference
+        layout="@layout/pref_divider"
+        android:enabled="false"
+        android:selectable="false"/>
 
     <PreferenceCategory
         android:title="@string/pref_payment_kplus"
         android:key="pref_key_storage_settings">
-        <Preference
-            android:title="@string/pref_title_qrcode_help"
-            android:key="kbank_qrcode_help"/>
-
         <SwitchPreference
             android:defaultValue="false"
             android:key="kbank_qrcode_status"

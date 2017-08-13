@@ -30,16 +30,27 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.sin.projectone.Constant;
+import com.example.sin.projectone.HttpUtilsAsync;
 import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.PaymentMethodManager;
 import com.example.sin.projectone.R;
+import com.example.sin.projectone.UserManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import cz.msebera.android.httpclient.Header;
 
 import static android.R.attr.width;
 import static android.graphics.Color.BLACK;
@@ -60,6 +71,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static final String KEY_PREF_SYNC_CONN = "sync_frequency" ;
     private ImgManager imgManager;
     private PaymentMethodManager paymentMM;
+    private UserManager userManager;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -149,8 +161,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setTitle("Setting");
         setupActionBar();
+        userManager = new UserManager(this);
         paymentMM = new PaymentMethodManager(this);
         imgManager = ImgManager.getInstance();
+        uploadSetting(userManager);
         setPrefFromExistFile("kbank_qrcode.png","kbank_qrcode_status");
         setPrefFromExistFile("ktb_qrcode.png","ktb_qrcode_status");
 
@@ -175,7 +189,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        uploadSetting(userManager);
+        // put your code here...
 
+    }
     /**
      * {@inheritDoc}
      */
@@ -207,6 +227,37 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         }
     }
+
+    public void uploadSetting(UserManager userManager){
+        String shopID = userManager.getShopId();
+        Map<String, ?> allEntries = paymentMM.getAllValue();
+        System.out.println(allEntries);
+        RequestParams params = new RequestParams();
+
+        for (final Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            params.put("shopID",shopID);
+            params.put("name", entry.getKey());
+            params.put("value",entry.getValue().toString());
+            HttpUtilsAsync.post(Constant.URL_SEND_SETTING, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
+                    System.out.println("map values "+ entry.getKey() + ": " + entry.getValue().toString());
+                    System.out.println(entry.getKey() + " Success");
+                }
+
+                @Override
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    System.out.println(entry.getKey() + " Failed");
+
+                }
+            });
+            System.out.println("map values "+ entry.getKey() + ": " + entry.getValue().toString());
+//            if(entry.getValue().toString().equals("true")||entry.getValue().toString().equals("false")){
+//                paymentMM.setValue(entry.getKey(),entry.getValue().toString(),"boolean");
+//            }
+//            paymentMM.setValue(entry.getKey(),entry.getValue().toString(),"string");
+        }
+    }
     /**
      * This method stops fragment injection in malicious applications.
      * Make sure to deny any unknown fragments here.
@@ -234,7 +285,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             imgManager = ImgManager.getInstance();
             addPreferencesFromResource(R.xml.pref_payment_method);
             setHasOptionsMenu(true);
-
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
@@ -278,8 +328,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 //            bindPreferenceSummaryToValue(findPreference("paypal_link"));
             setEnablePaymentMethod("ktb_qrcode_status", this.getActivity());
             setEnablePaymentMethod("kbank_qrcode_status", this.getActivity());
-            bindOnClickToPreference("kbank_qrcode_help", this.getActivity());
-            bindOnClickToPreference("ktb_qrcode_help", this.getActivity());
+//            bindOnClickToPreference("kbank_qrcode_help", this.getActivity());
+//            bindOnClickToPreference("ktb_qrcode_help", this.getActivity());
 
             Log.d("sync_frequency", "onCreate: "+ syncConnPref);
         }
@@ -293,6 +343,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
 
         Bitmap encodeAsBitmap(String str) throws WriterException {
             int WIDTH=500;

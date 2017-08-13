@@ -1,7 +1,6 @@
 package com.example.sin.projectone;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,7 +29,7 @@ public class UserManager extends AppCompatActivity {
     private final String KEY_PASSWORD = "password";
     private final String KEY_SHOP_ID = "shop_id";
     private final String KEY_USER_ID = "user_id";
-    private final String KEY_type = "type";
+    private final String KEY_TYPE = "type";
 
 
 
@@ -86,7 +85,7 @@ public class UserManager extends AppCompatActivity {
         mEditor.putString(KEY_USERNAME, username);
         mEditor.putString(KEY_USER_ID, userId);
         mEditor.putString(KEY_SHOP_ID, shopId);
-        mEditor.putString(KEY_type, type);
+        mEditor.putString(KEY_TYPE, type);
         Log.d(TAG, "saveSession: Done");
         return mEditor.commit();
     }
@@ -114,6 +113,14 @@ public class UserManager extends AppCompatActivity {
         String userId = mPrefs.getString(KEY_USER_ID,"");
         if(!userId.equals("")){
             return userId;
+        }
+        return String.valueOf(Constant.USER_ID);
+    }
+
+    public String getUserType(){
+        String type = mPrefs.getString(KEY_TYPE,"");
+        if(!type.equals("")){
+            return type;
         }
         return String.valueOf(Constant.USER_ID);
     }
