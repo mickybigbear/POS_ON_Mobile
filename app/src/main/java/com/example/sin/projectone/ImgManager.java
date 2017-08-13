@@ -147,9 +147,9 @@ public class ImgManager {
 
     public void recoveryLostImg(){
         final Context context = ApplicationHelper.getAppContext();
+        final ImgManager that = this;
         ArrayList<Product> products =  ProductDBHelper.getInstance(context).getAllProductFromDB();
         for (final Product product: products){
-            final ImgManager that = this;
             if(!checkImageName(product.imgName)) {
                 WebService.getImg(new FileAsyncHttpResponseHandler(context){
                     @Override
