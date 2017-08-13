@@ -8,16 +8,26 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by nanth on 12/2/2016.
@@ -135,7 +145,26 @@ public class ImgManager {
         return imgFile;
     }
 
+    public void recoveryLostImg(){
+        final Context context = ApplicationHelper.getAppContext();
+        ArrayList<Product> products =  ProductDBHelper.getInstance(context).getAllProductFromDB();
+        for (final Product product: products){
+            final ImgManager that = this;
+            if(!checkImageName(product.imgName)) {
+                WebService.getImg(new FileAsyncHttpResponseHandler(context){
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
 
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, File file) {
+                        that.saveImgURIToInternalStorage(Uri.fromFile(file), product.imgName, context);
+                    }
+                }, product.imgName);
+            }
+        }
+    }
 
 //    public void dispatchTakePictureIntent(Fragment fragment) {
 //        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

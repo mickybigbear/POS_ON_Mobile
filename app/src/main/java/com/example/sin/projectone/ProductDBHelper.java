@@ -417,12 +417,14 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         }
 
     }
+
     public boolean getDailyReport(String date){
         String sql = "SELECT td.name, td.qty FROM transactionDetail td WHERE createAt like '"+date+"%' ORDER BY name";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         return cursor.getCount() > 0;
     }
+
     public JSONArray getDailyDetail(String date){
         JSONArray transDetailList = new JSONArray();
         String sql = "SELECT SUM(tt.total) AS total, SUM(tt.discount) AS discount FROM transaction_table tt WHERE createAt like '"+date+"%'";
@@ -450,6 +452,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sql, null);
         return  cursor;
     }
+
     public Cursor getTransactionDetail(String whereCol){
         String sql = "SELECT _id, name, price,qty FROM transactionDetail WHERE transactionID = "+whereCol;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -485,6 +488,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sql, null);
         return  cursor;
     }
+
     public JSONArray getTopDetail(String type){
         String sql= "";
         JSONArray transDetailList = new JSONArray();

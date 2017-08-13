@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.sin.projectone.Constant;
 import com.example.sin.projectone.HttpUtilsAsync;
+import com.example.sin.projectone.ImgManager;
 import com.example.sin.projectone.OnBackPressedInterface;
 import com.example.sin.projectone.ProductDBHelper;
 import com.example.sin.projectone.R;
@@ -283,6 +284,7 @@ public class MainActivity extends AppCompatActivity
                 try {
                     if(response.length()>0){
                         ProductDBHelper.getInstance(MainActivity.this.getApplicationContext()).LoadProduct(response.getJSONArray("Products"));
+                        ImgManager.getInstance().recoveryLostImg();
                     }
                     else if(response.length()==0){
                         System.out.println("Empty");
