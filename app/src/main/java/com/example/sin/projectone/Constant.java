@@ -38,13 +38,21 @@ public class Constant {
     public final static String KEY_JSON_USERID = "userID";
 
 
-    //
-    // Permission
+
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // Permission
+    public final static int PERMISSIONS_REQUEST_CAMERA = 101;
+    public final static int PERMISSIONS_REQUEST_INTERNET = 102;
+
+
     //
     //url web Service
     public final static String URL_SERVER                   = "http://172.104.188.6:3001";
+    //public final static String URL_SERVER                   = "http://172.104.188.6:3001";
+    public final static String URL_SERVER                   = "http://192.168.1.105:3001";
     public final static String URL_GET_ALL_PRODUCT          = URL_SERVER+"/api/product/";
+    public final static String URL_GET_IMG                  = URL_SERVER+"/api/product/";
     public final static String URL_SEND_TRANSACTION         = URL_SERVER+"/api/transaction/";
     public final static String URL_GET_TRANSACTION_DETAIL   = URL_SERVER+"/api/transactionDetail/";
     public final static String URL_SEND_UPDATE_PRODUCT      = URL_SERVER+"/api/product/";
