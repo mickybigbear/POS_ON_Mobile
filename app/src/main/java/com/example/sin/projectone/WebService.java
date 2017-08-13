@@ -81,6 +81,16 @@ public class WebService {
         _Client.post(ApplicationHelper.getAppContext(),url,params,handler);
     }
 
+    public static void deleteProduct(JsonHttpResponseHandler handler, String productID){
+        UserManager userManager = new UserManager(ApplicationHelper.getAppContext());
+        String url = Constant.URL_DELETE_ITEM;
+        RequestParams params = new RequestParams();
+        try {
+            params.put(Constant.KEY_REQUEST_PAREMS_PRODUCT_DELETE, productID);
+        } catch(Exception e) {}
+        _Client.delete(url,params, handler);
+    }
+
     public static void postABC(AsyncHttpResponseHandler handler,String url){
         _Client.post(url,handler);
     }

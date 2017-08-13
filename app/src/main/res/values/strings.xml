@@ -24,6 +24,7 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
+    <string name="btn_delete_item">Delete Item</string>
     <string name="label_product_discount">Discount :</string>
     <string name="btn_submit">SUBMIT</string>
     <string name="btn_add">ADD</string>
@@ -173,5 +174,6 @@
 
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="demo_collection">Demo Collection</string>
+    <string name="alert_delete_item">Are you sure to delete this item ?</string>
 
 </resources>

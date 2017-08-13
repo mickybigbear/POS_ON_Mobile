@@ -48,7 +48,6 @@ public class Constant {
 
     //
     //url web Service
-    public final static String URL_SERVER                   = "http://172.104.188.6:3001";
     //public final static String URL_SERVER                   = "http://172.104.188.6:3001";
     public final static String URL_SERVER                   = "http://192.168.1.105:3001";
     public final static String URL_GET_ALL_PRODUCT          = URL_SERVER+"/api/product/";
@@ -57,6 +56,7 @@ public class Constant {
     public final static String URL_GET_TRANSACTION_DETAIL   = URL_SERVER+"/api/transactionDetail/";
     public final static String URL_SEND_UPDATE_PRODUCT      = URL_SERVER+"/api/product/";
     public final static String URL_SEND_ADD_PRODUCT         = URL_SERVER+"/api/product2/";
+    public final static String URL_DELETE_ITEM              = URL_SERVER+"/api/product/";
     // Tag Fragment
     public final static String TAG_FRAGMENT_CONTAINER = "tag_fragment_container";
     public final static String TAG_FRAGMENT_ITEM_EDIT = "tag_fragment_item_edit";
@@ -100,6 +100,7 @@ public class Constant {
     // Key param
     public final static String KEY_REQUEST_PAREMS_PRODUCT_ADD = "key_request_param_product_add";
     public final static String KEY_REQUEST_PAREMS_PRODUCT_IMG_FILE = "key_request_param_img_product";
+    public final static String KEY_REQUEST_PAREMS_PRODUCT_DELETE = "key_request_param_product_delete";
 
     // other
     // path to /data/data/com.example.sin.projectone/app_productImg

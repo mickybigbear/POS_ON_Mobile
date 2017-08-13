@@ -1,9 +1,11 @@
 package com.example.sin.projectone.item;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -26,6 +28,7 @@ import com.example.sin.projectone.R;
 import com.example.sin.projectone.WebService;
 import com.example.sin.projectone.main.MainActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +51,7 @@ public class EditProduct extends Fragment {
     private EditText edt_p_name, edt_p_barcode, edt_p_qty, edt_p_price, edt_p_cost, edt_p_detail;
     private MessageAlertDialog alertDialog;
     private MenuItem editActionView;
+    private Button btn_delete_item;
 
     public EditProduct(){
 
@@ -79,6 +83,7 @@ public class EditProduct extends Fragment {
         edt_p_cost = (EditText) view.findViewById(R.id.edt_num_product_cost);
         edt_p_detail = (EditText) view.findViewById(R.id.edt_text_product_details);
         text_product_type = (TextView) view.findViewById(R.id.text_product_type);
+        btn_delete_item = (Button) view.findViewById(R.id.btn_delete_item);
 
         edt_p_name.setText(products.name);
         edt_p_barcode.setText(products.barcode);
@@ -87,6 +92,8 @@ public class EditProduct extends Fragment {
         edt_p_cost.setText(products.cost);
         edt_p_detail.setText(products.details);
         text_product_type.setText(products.type);
+
+        btn_delete_item.setOnClickListener(onDeleteItemClick());
 
         Bitmap img = ImgManager.getInstance().loadImageFromStorage(products.imgName);
         if(img!=null){
@@ -179,7 +186,7 @@ public class EditProduct extends Fragment {
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                     fragmentTransaction.remove(EditProduct.this).commit();
                                     fragmentManager.popBackStack();
-                                    ((MainActivity)getActivity()).showBackToolbar(false); // temp
+                                    ((MainActivity)getActivity()).showBackToolbar(false);
                                 }
 
                                 @Override
@@ -196,6 +203,67 @@ public class EditProduct extends Fragment {
                 }catch (Exception e){
                     return;
                 }
+            }
+        };
+    }
+
+    private View.OnClickListener onDeleteItemClick(){
+        final EditProduct that = this;
+        return  new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getString(R.string.alert_delete_item))
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                final ProgressDialog progressWait = ProgressDialog.show(EditProduct.this.getActivity(), "Loading",
+                                        "Please wait ...", true);
+                                WebService.deleteProduct(new JsonHttpResponseHandler(){
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        super.onSuccess(statusCode, headers, response);
+                                        ProductDBHelper.getInstance(getActivity().getApplicationContext()).deleteProduct(that.saveProduct.id);
+                                        progressWait.dismiss();
+
+                                        final String tag = Constant.TAG_FRAGMENT_DIALOG_ALERT;
+                                        Bundle b = new Bundle();
+                                        b.putString(Constant.KEY_BUNDLE_MESSAGE_DIALOG,"Delete Item Finish");
+                                        b.putString(Constant.KEY_BUNDLE_TITLE_DIALOG, "Finished sending data");
+                                        b.putBoolean(Constant.KEY_BYNDLE_HAS_OK_CANCEL_DIALOG,false);
+                                        final MessageAlertDialog dialog2 = MessageAlertDialog.newInstance(b);
+                                        dialog2.show(fragmentManager,tag);
+                                        new CountDownTimer(3000, 1000) {
+                                            @Override
+                                            public void onTick(long millisUntilFinished) { }
+                                            @Override
+                                            public void onFinish() {dialog2.dismiss();}
+                                        }.start();
+
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.remove(EditProduct.this).commit();
+                                        fragmentManager.popBackStack();
+                                        ((MainActivity)getActivity()).showBackToolbar(false);
+                                    }
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        super.onFailure(statusCode, headers, responseString, throwable);
+                                        progressWait.dismiss();
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        progressWait.dismiss();
+                                    }
+                                }, that.saveProduct.id);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create().show();
             }
         };
     }

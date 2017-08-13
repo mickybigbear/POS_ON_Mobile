@@ -334,6 +334,13 @@ public class ProductDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean deleteProduct(String productID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        boolean bool =  db.delete(Table.TABLE_PRODUCT, Table.COLUMN_P_ID + "=" + productID, null) > 0;
+        db.close();
+        return bool;
+    }
+
     public void insertProduct(JSONObject jsonObject){
         SQLiteDatabase db = this.getWritableDatabase();
         try {
