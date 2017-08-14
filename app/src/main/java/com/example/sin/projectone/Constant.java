@@ -48,9 +48,8 @@ public class Constant {
 
     //
     //url web Service
-    public final static String URL_SERVER                   = "http://172.104.188.6:3001";
     //public final static String URL_SERVER                   = "http://172.104.188.6:3001";
-    public final static String URL_SERVER                   = "http://192.168.1.105:3001";
+    public final static String URL_SERVER                   = "http://192.168.43.14:3001";
     public final static String URL_GET_ALL_PRODUCT          = URL_SERVER+"/api/product/";
     public final static String URL_GET_IMG                  = URL_SERVER+"/api/product/";
     public final static String URL_SEND_TRANSACTION         = URL_SERVER+"/api/transaction/";
